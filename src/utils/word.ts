@@ -8,8 +8,6 @@ export enum LetterState {
   Match,
 }
 
-const word = getRandomWord();
-
 export const computeGuess = (guess: string, answerString: string): LetterState[] => {
   const result: LetterState[] = [];
 
