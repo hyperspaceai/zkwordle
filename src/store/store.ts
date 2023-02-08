@@ -61,14 +61,14 @@ export const useGameStore = create<GameState>()(
         }));
       };
       return {
-        answer: 'react',
+        answer: getRandomWord(),
         rows: [],
         gameState: 'playing',
         keyboardLetterState: {},
         addGuess,
         newGame: (initialRows = []) => {
           set({
-            answer: 'react',
+            answer: getRandomWord(),
             gameState: 'playing',
             rows: [],
             keyboardLetterState: {},
