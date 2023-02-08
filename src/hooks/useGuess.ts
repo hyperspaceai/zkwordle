@@ -1,12 +1,60 @@
-import { LETTER_LENGTH } from '@/utils/word';
+import { useGameStore } from '@/store/store';
+import { isValidWord, LETTER_LENGTH } from '@/utils/word';
 import { useEffect, useState } from 'react';
+import { usePrevious } from './usePrevious';
 
 export function useGuess(): [
   string,
   React.Dispatch<React.SetStateAction<string>>,
-  (letter: string) => void
+  (letter: string) => void,
+  boolean,
+  boolean,
+  boolean
 ] {
   const [guess, setGuess] = useState('');
+
+  const [showInvalidGuess, setInvalidGuess] = useState(false);
+  const [checkingGuess, setCheckingGuess] = useState(false);
+  const [canType, setCanType] = useState(true);
+  const addGuess = useGameStore((s) => s.addGuess);
+  const prevGuess = usePrevious(guess);
+
+  useEffect(() => {
+    let id: NodeJS.Timeout;
+    if (showInvalidGuess) {
+      id = setTimeout(() => setInvalidGuess(false), 1500);
+    }
+
+    return () => clearTimeout(id);
+  }, [showInvalidGuess]);
+
+  useEffect(() => {
+    let id: NodeJS.Timeout;
+    if (checkingGuess) {
+      id = setTimeout(() => {
+        setCheckingGuess(false);
+        setCanType(true);
+      }, 1500);
+    }
+    return () => clearTimeout(id);
+  }, [checkingGuess]);
+
+  useEffect(() => {
+    if (guess.length == 0 && prevGuess?.length === LETTER_LENGTH) {
+      if (!canType) {
+        return setGuess(prevGuess);
+      }
+      if (isValidWord(prevGuess)) {
+        addGuess(prevGuess);
+        setCheckingGuess(true);
+        setCanType(false);
+        setInvalidGuess(false);
+      } else {
+        setInvalidGuess(true);
+        setGuess(prevGuess);
+      }
+    }
+  }, [guess]);
 
   const addGuessLetter = (letter: string) => {
     setGuess((currGuess) => {
@@ -38,5 +86,5 @@ export function useGuess(): [
     };
   });
 
-  return [guess, setGuess, addGuessLetter];
+  return [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType];
 }

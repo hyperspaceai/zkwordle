@@ -4,59 +4,13 @@ import Keyboard from '@/components/Keyboard';
 import WordRow from '@/components/WordRow';
 import { useGuess } from '@/hooks/useGuess';
 import { useHasHydrated } from '@/hooks/useHydrated';
-import { usePrevious } from '@/hooks/usePrevious';
 import { GUESS_LENGTH, useGameStore } from '@/store/store';
-import { isValidWord, LETTER_LENGTH } from '@/utils/word';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
 
 export default function Home() {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
-  const [guess, setGuess, addGuessLetter] = useGuess();
-  const addGuess = useGameStore((s) => s.addGuess);
-  const prevGuess = usePrevious(guess);
-
-  const [showInvalidGuess, setInvalidGuess] = useState(false);
-  const [checkingGuess, setCheckingGuess] = useState(false);
-  const [canType, setCanType] = useState(true);
-
-  useEffect(() => {
-    let id: NodeJS.Timeout;
-    if (showInvalidGuess) {
-      id = setTimeout(() => setInvalidGuess(false), 1500);
-    }
-
-    return () => clearTimeout(id);
-  }, [showInvalidGuess]);
-
-  useEffect(() => {
-    let id: NodeJS.Timeout;
-    if (checkingGuess) {
-      id = setTimeout(() => {
-        setCheckingGuess(false);
-        setCanType(true);
-      }, 1500);
-    }
-    return () => clearTimeout(id);
-  }, [checkingGuess]);
-
-  useEffect(() => {
-    if (guess.length == 0 && prevGuess?.length === LETTER_LENGTH) {
-      if (!canType) {
-        return setGuess(prevGuess);
-      }
-      if (isValidWord(prevGuess)) {
-        addGuess(prevGuess);
-        setCheckingGuess(true);
-        setCanType(false);
-        setInvalidGuess(false);
-      } else {
-        setInvalidGuess(true);
-        setGuess(prevGuess);
-      }
-    }
-  }, [guess]);
+  const [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType] = useGuess();
 
   let rows = [...state.rows];
   let currentRow = 0;
@@ -69,6 +23,7 @@ export default function Home() {
 
   const isGameOver = state.gameState !== 'playing';
 
+  // fixes hydration text error
   if (!hasHydrated) return null;
 
   return (
