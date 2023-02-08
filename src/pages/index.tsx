@@ -3,6 +3,7 @@ import GameModal from '@/components/GameModal';
 import Keyboard from '@/components/Keyboard';
 import WordRow from '@/components/WordRow';
 import { useGuess } from '@/hooks/useGuess';
+import { useHasHydrated } from '@/hooks/useHydrated';
 import { usePrevious } from '@/hooks/usePrevious';
 import { GUESS_LENGTH, useGameStore } from '@/store/store';
 import { isValidWord, LETTER_LENGTH } from '@/utils/word';
@@ -10,6 +11,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const hasHydrated = useHasHydrated();
   const state = useGameStore();
   const [guess, setGuess, addGuessLetter] = useGuess();
   const addGuess = useGameStore((s) => s.addGuess);
@@ -66,6 +68,8 @@ export default function Home() {
   rows = rows.concat(Array(numberOfGuessesRemaining).fill(''));
 
   const isGameOver = state.gameState !== 'playing';
+
+  if (!hasHydrated) return null;
 
   return (
     <>
