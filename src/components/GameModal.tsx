@@ -1,5 +1,6 @@
 import { GameState } from '@/store/store';
 import { Dispatch, SetStateAction } from 'react';
+import TweetMessage from './TweetMessage';
 import WordRow from './WordRow';
 
 type Props = {
@@ -36,6 +37,7 @@ const GameModal = ({ state, showInvalidGuess, setGuess }: Props) => {
       >
         New Game
       </button>
+      <TweetMessage guesses={state.rows} />
     </div>
   );
 };

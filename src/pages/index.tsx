@@ -80,6 +80,7 @@ export default function Home() {
         <header className="border-b border-gray-300 pb-2 my-2 mb-4">
           <h1 className="text-6xl text-center text-white ">Hordle</h1>
         </header>
+
         <main className="grid grid-rows-6 gap-2 mb-4">
           {rows.map(({ guess, result }, index) => (
             <WordRow
