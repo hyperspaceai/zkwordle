@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export const useHasHydrated = () => {
   const [hasHydrated, setHasHydrated] = useState<boolean>(false);

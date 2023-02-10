@@ -1,21 +1,22 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { computeGuess, getRandomWord, LetterState } from '../utils/word';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
+import { computeGuess, getRandomWord, LetterState } from "../utils/word";
 
 export const NUMBER_OF_GUESSES = 6;
 export const WORD_LENGTH = 5;
 export const GUESS_LENGTH = 6;
 
 export interface GuessRow {
-  guess: string;
+  word: string;
   result?: LetterState[];
 }
 
 export interface GameState {
   answer: string;
   rows: GuessRow[];
-  gameState: 'playing' | 'won' | 'lost';
-  keyboardLetterState: { [letter: string]: LetterState };
+  gameState: "playing" | "won" | "lost";
+  keyboardLetterState: Record<string, LetterState>;
   addGuess: (guess: string) => void;
   newGame: (intialGuess?: string[]) => void;
 }
@@ -23,22 +24,22 @@ export interface GameState {
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => {
-      const addGuess = (guess: string) => {
-        console.log({ guess });
-        const result = computeGuess(guess, get().answer);
+      const addGuess = (word: string) => {
+        const result = computeGuess(word, get().answer);
         const didWin = result.every((i) => i === LetterState.Match);
 
         const rows = [
           ...get().rows,
           {
-            guess,
+            word,
             result,
           },
         ];
 
         const keyboardLetterState = get().keyboardLetterState;
         result.forEach((r, index) => {
-          const resultGuessLetter = guess[index];
+          const resultGuessLetter = word[index];
+          if (!resultGuessLetter) return;
 
           const currentLetterState = keyboardLetterState[resultGuessLetter];
           switch (currentLetterState) {
@@ -48,28 +49,41 @@ export const useGameStore = create<GameState>()(
               if (r === LetterState.Miss) {
                 break;
               }
+              break;
             default:
               keyboardLetterState[resultGuessLetter] = r;
               break;
           }
         });
 
-        set(() => ({
-          rows,
-          keyboardLetterState,
-          gameState: didWin ? 'won' : rows.length === GUESS_LENGTH ? 'lost' : 'playing',
-        }));
+        set(() => {
+          let gameState: GameState["gameState"];
+
+          if (didWin) {
+            gameState = "won";
+          } else if (rows.length === GUESS_LENGTH) {
+            gameState = "lost";
+          } else {
+            gameState = "playing";
+          }
+
+          return {
+            rows,
+            keyboardLetterState,
+            gameState,
+          };
+        });
       };
       return {
         answer: getRandomWord(),
         rows: [],
-        gameState: 'playing',
+        gameState: "playing",
         keyboardLetterState: {},
         addGuess,
         newGame: (initialRows = []) => {
           set({
             answer: getRandomWord(),
-            gameState: 'playing',
+            gameState: "playing",
             rows: [],
             keyboardLetterState: {},
           });
@@ -79,9 +93,9 @@ export const useGameStore = create<GameState>()(
     },
 
     {
-      name: 'hordale',
-    }
-  )
+      name: "hordale",
+    },
+  ),
 );
 
 // useStore.persist.clearStorage();

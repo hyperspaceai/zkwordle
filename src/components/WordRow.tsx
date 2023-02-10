@@ -1,33 +1,40 @@
-import { LetterState, LETTER_LENGTH } from '@/utils/word';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-type WordRowProps = {
+import { LETTER_LENGTH, LetterState } from "@/utils/word";
+
+const characterStateStyles = {
+  [LetterState.Miss]: "border-zinc-400 bg-zinc-400",
+  [LetterState.Present]: "border-amber-400 bg-amber-400",
+  [LetterState.Match]: "border-emerald-400 bg-emerald-400",
+};
+
+interface WordRowProps {
   letters: string;
   result?: LetterState[];
   className?: string;
   invalidWord: boolean;
   checkingGuess?: boolean;
-};
+}
 const WordRow = ({
-  letters: lettersProp = '',
+  letters: lettersProp = "",
   result = [],
-  className = '',
+  className = "",
   invalidWord = false,
   checkingGuess = false,
 }: WordRowProps) => {
   const lettersRemaining = LETTER_LENGTH - lettersProp.length;
-  const letters = lettersProp.split('').concat(Array(lettersRemaining).fill(''));
+  const letters = lettersProp.split("").concat(Array(lettersRemaining).fill(""));
 
   return (
     <div className={`grid grid-cols-5 gap-2 ${className}`}>
       {letters.map((char, index) => (
         <CharacterBox
-          key={index}
-          index={index}
-          value={char}
-          state={result[index]}
-          invalidWord={invalidWord}
+          key={char + String(index)}
           checkingGuess={checkingGuess}
+          index={index}
+          invalidWord={invalidWord}
+          state={result[index]}
+          value={char}
         />
       ))}
     </div>
@@ -41,7 +48,7 @@ interface CharacterBoxProps {
   state?: LetterState;
   invalidWord?: boolean;
   checkingGuess?: boolean;
-  index: Number;
+  index: number;
 }
 
 const CharacterBox = ({ value, state, invalidWord, checkingGuess, index }: CharacterBoxProps) => {
@@ -73,15 +80,18 @@ const CharacterBox = ({ value, state, invalidWord, checkingGuess, index }: Chara
 
     return () => clearTimeout(id);
   }, [shouldFlip]);
-  let flip = shouldFlip ? ` animate-flip` : '';
 
-  let stateStyles = showStyles
-    ? state == null
-      ? ' text-white'
-      : `${characterStateStyles[state]} text-white`
-    : 'border-zinc-300 text-white';
-  if (invalidWord) {
-    stateStyles += ' border-red-500';
+  const flip = shouldFlip ? ` animate-flip` : "";
+
+  let stateStyles: string;
+  if (showStyles) {
+    if (state === undefined) {
+      stateStyles = " text-white";
+    } else {
+      stateStyles = `${characterStateStyles[state]} text-white`;
+    }
+  } else {
+    stateStyles = "border-zinc-300 text-white";
   }
 
   return (
@@ -91,10 +101,4 @@ const CharacterBox = ({ value, state, invalidWord, checkingGuess, index }: Chara
       {value}
     </span>
   );
-};
-
-const characterStateStyles = {
-  [LetterState.Miss]: 'border-zinc-400 bg-zinc-400',
-  [LetterState.Present]: 'border-amber-400 bg-amber-400',
-  [LetterState.Match]: 'border-emerald-400 bg-emerald-400',
 };

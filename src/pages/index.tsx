@@ -1,13 +1,14 @@
-import ErrorModal from '@/components/ErrorModal';
-import GameModal from '@/components/GameModal';
-import Keyboard from '@/components/Keyboard';
-import WordRow from '@/components/WordRow';
-import { useGuess } from '@/hooks/useGuess';
-import { useHasHydrated } from '@/hooks/useHydrated';
-import { GUESS_LENGTH, useGameStore } from '@/store/store';
-import Head from 'next/head';
+import Head from "next/head";
 
-export default function Home() {
+import ErrorModal from "@/components/ErrorModal";
+import GameModal from "@/components/GameModal";
+import Keyboard from "@/components/Keyboard";
+import WordRow from "@/components/WordRow";
+import { useGuess } from "@/hooks/useGuess";
+import { useHasHydrated } from "@/hooks/useHydrated";
+import { GUESS_LENGTH, useGameStore } from "@/store/store";
+
+const Home = () => {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
   const [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType] = useGuess();
@@ -15,13 +16,13 @@ export default function Home() {
   let rows = [...state.rows];
   let currentRow = 0;
   if (rows.length < GUESS_LENGTH) {
-    currentRow = rows.push({ guess }) - 1;
+    currentRow = rows.push({ word: guess }) - 1;
   }
 
   const numberOfGuessesRemaining = GUESS_LENGTH - rows.length;
-  rows = rows.concat(Array(numberOfGuessesRemaining).fill(''));
+  rows = rows.concat(Array(numberOfGuessesRemaining).fill(""));
 
-  const isGameOver = state.gameState !== 'playing';
+  const isGameOver = state.gameState !== "playing";
 
   // fixes hydration text error
   if (!hasHydrated) return null;
@@ -30,9 +31,9 @@ export default function Home() {
     <>
       <Head>
         <title>Hyperspace - Hordle</title>
-        <meta name="description" content="Wordle game" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Hordle Game" />
+        <meta content="Wordle game" name="description" />
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="Hordle Game" name="description" />
       </Head>
 
       <div className="mx-auto w-96 relative">
@@ -41,14 +42,14 @@ export default function Home() {
         </header>
 
         <main className="grid grid-rows-6 gap-2 mb-4">
-          {rows.map(({ guess, result }, index) => (
+          {rows.map(({ word, result }, index) => (
             <WordRow
-              key={index}
-              letters={guess}
-              result={result}
-              invalidWord={showInvalidGuess && index === currentRow}
+              key={word + String(index)}
               checkingGuess={checkingGuess && index === currentRow - 1}
-              className={showInvalidGuess && index === currentRow ? 'animate-bounce' : ''}
+              className={showInvalidGuess && index === currentRow ? "animate-bounce" : ""}
+              invalidWord={showInvalidGuess && index === currentRow}
+              letters={word}
+              result={result}
             />
           ))}
 
@@ -61,15 +62,13 @@ export default function Home() {
           />
 
           {isGameOver && !checkingGuess && (
-            <GameModal
-              state={state}
-              showInvalidGuess={showInvalidGuess}
-              setGuess={() => setGuess}
-            />
+            <GameModal setGuess={() => setGuess} showInvalidGuess={showInvalidGuess} state={state} />
           )}
           {showInvalidGuess && <ErrorModal />}
         </main>
       </div>
     </>
   );
-}
+};
+
+export default Home;

@@ -1,17 +1,19 @@
-import { useGameStore } from '@/store/store';
-import { isValidWord, LETTER_LENGTH } from '@/utils/word';
-import { useEffect, useState } from 'react';
-import { usePrevious } from './usePrevious';
+import { useEffect, useState } from "react";
 
-export function useGuess(): [
+import { useGameStore } from "@/store/store";
+import { isValidWord, LETTER_LENGTH } from "@/utils/word";
+
+import { usePrevious } from "./usePrevious";
+
+export const useGuess = (): [
   string,
   React.Dispatch<React.SetStateAction<string>>,
   (letter: string) => void,
   boolean,
   boolean,
-  boolean
-] {
-  const [guess, setGuess] = useState('');
+  boolean,
+] => {
+  const [guess, setGuess] = useState("");
 
   const [showInvalidGuess, setInvalidGuess] = useState(false);
   const [checkingGuess, setCheckingGuess] = useState(false);
@@ -40,7 +42,7 @@ export function useGuess(): [
   }, [checkingGuess]);
 
   useEffect(() => {
-    if (guess.length == 0 && prevGuess?.length === LETTER_LENGTH) {
+    if (guess.length === 0 && prevGuess.length === LETTER_LENGTH) {
       if (!canType) {
         return setGuess(prevGuess);
       }
@@ -58,14 +60,13 @@ export function useGuess(): [
 
   const addGuessLetter = (letter: string) => {
     setGuess((currGuess) => {
-      const newGuess =
-        letter.length === 1 && currGuess.length !== LETTER_LENGTH ? currGuess + letter : currGuess;
+      const newGuess = letter.length === 1 && currGuess.length !== LETTER_LENGTH ? currGuess + letter : currGuess;
       switch (letter) {
-        case 'Backspace':
+        case "Backspace":
           return newGuess.slice(0, -1);
-        case 'Enter':
+        case "Enter":
           if (newGuess.length === LETTER_LENGTH) {
-            return '';
+            return "";
           }
       }
       if (currGuess.length === LETTER_LENGTH) return currGuess;
@@ -74,17 +75,17 @@ export function useGuess(): [
   };
 
   const onKeyDown = (e: KeyboardEvent) => {
-    let letter = e.key;
+    const letter = e.key;
     addGuessLetter(letter);
   };
 
   useEffect(() => {
-    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener("keydown", onKeyDown);
     };
   });
 
   return [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType];
-}
+};
