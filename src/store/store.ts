@@ -14,6 +14,7 @@ export interface GuessRow {
 
 export interface GameState {
   answer: string;
+  timeOffset: number;
   rows: GuessRow[];
   gameState: "playing" | "won" | "lost";
   keyboardLetterState: Record<string, LetterState>;
@@ -76,6 +77,7 @@ export const useGameStore = create<GameState>()(
       };
       return {
         answer: getRandomWord(),
+        timeOffset: new Date().getTimezoneOffset(),
         rows: [],
         gameState: "playing",
         keyboardLetterState: {},
