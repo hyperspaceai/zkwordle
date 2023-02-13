@@ -41,6 +41,22 @@ export const getRandomWord = () => {
   return wordBank.valid[Math.floor(Math.random() * wordBank.valid.length)] as string;
 };
 
+export const getTodaysWord = () => {
+  // check if its a new day and if so, get a new word
+  const todaysWord = localStorage.getItem("todaysWord");
+  const todaysWordDate = localStorage.getItem("todaysWordDate");
+  const todaysDate = new Date().toUTCString();
+
+  if (todaysWord && todaysWordDate === todaysDate) {
+    return todaysWord;
+  }
+
+  const newWord = getRandomWord();
+  localStorage.setItem("todaysWord", newWord);
+  localStorage.setItem("todaysWordDate", todaysDate);
+  return newWord;
+};
+
 export const isValidWord = (word: string): boolean => {
   return wordBank.valid.concat(wordBank.invalid).includes(word);
 };

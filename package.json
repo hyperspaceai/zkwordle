@@ -6,10 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio",
+    "db:push": "prisma db push",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@next/font": "13.1.6",
+    "@prisma/client": "^4.10.1",
     "@types/node": "18.11.19",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
@@ -25,7 +30,12 @@
     "@hyperspaceinc/style-guide": "^0.0.4",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.4"
+    "prisma": "^4.10.1",
+    "tailwindcss": "^3.2.4",
+    "ts-node": "^10.9.1"
   },
-  "prettier": "@hyperspaceinc/style-guide/prettier"
+  "prettier": "@hyperspaceinc/style-guide/prettier",
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  }
 }
