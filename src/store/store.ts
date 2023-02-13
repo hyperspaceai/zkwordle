@@ -14,12 +14,13 @@ export interface GuessRow {
 
 export interface GameState {
   answer: string;
+  gameId: number;
   timeOffset: number;
   rows: GuessRow[];
   gameState: "playing" | "won" | "lost";
   keyboardLetterState: Record<string, LetterState>;
   addGuess: (guess: string) => void;
-  newGame: (intialGuess?: string[]) => void;
+  newGame: ({ answer, gameId }: { answer: string; gameId: number }) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -75,22 +76,24 @@ export const useGameStore = create<GameState>()(
           };
         });
       };
+      const newGame = ({ answer, gameId }: { answer: string; gameId: number }) => {
+        set({
+          answer,
+          gameId,
+          gameState: "playing",
+          rows: [],
+          keyboardLetterState: {},
+        });
+      };
       return {
         answer: getRandomWord(),
+        gameId: 0,
         timeOffset: new Date().getTimezoneOffset(),
         rows: [],
         gameState: "playing",
         keyboardLetterState: {},
         addGuess,
-        newGame: (initialRows = []) => {
-          set({
-            answer: getRandomWord(),
-            gameState: "playing",
-            rows: [],
-            keyboardLetterState: {},
-          });
-          initialRows.forEach(addGuess);
-        },
+        newGame,
       };
     },
 

@@ -1,4 +1,6 @@
+import type { Word } from "@prisma/client";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 
 import ErrorModal from "@/components/ErrorModal";
 import GameModal from "@/components/GameModal";
@@ -12,6 +14,25 @@ const Home = () => {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
   const [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType] = useGuess();
+
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("/api/todaysWord")
+      .then((res) => res.json())
+      .then((data: { word: Word }) => {
+        if (!state.answer || data.word.gameId !== state.gameId || state.answer !== data.word.word) {
+          state.newGame({ answer: data.word.word, gameId: data.word.gameId });
+          setGuess("");
+        }
+      })
+      .catch((err) => {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   let rows = [...state.rows];
   let currentRow = 0;

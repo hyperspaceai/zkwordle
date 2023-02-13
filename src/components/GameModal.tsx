@@ -24,7 +24,7 @@ const GameModal = ({ state, showInvalidGuess, setGuess }: GameModal) => {
       <button
         className="border border-emerald-500 rounded bg-emerald-500 p-2 mt-4 text-white shadow"
         onClick={() => {
-          state.newGame();
+          state.newGame({ answer: "react", gameId: 9999 });
           setGuess("");
         }}
         type="button"
