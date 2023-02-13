@@ -95,9 +95,7 @@ const Home = () => {
             }}
           />
 
-          {isGameOver && !checkingGuess && (
-            <GameModal setGuess={() => setGuess} showInvalidGuess={showInvalidGuess} state={state} />
-          )}
+          {isGameOver && !checkingGuess && <GameModal showInvalidGuess={showInvalidGuess} state={state} />}
           {showInvalidGuess && <ErrorModal />}
         </main>
       </div>
