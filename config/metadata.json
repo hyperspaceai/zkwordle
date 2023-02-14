@@ -1,0 +1,12 @@
+{
+  "name": "ZK-WASM Wordle Demo",
+  "shortName": "ZK-WASM Demo",
+  "description": "Wordle Demo",
+  "domain": "zkwordle.com",
+  "email": "hey@hyperspace.foundation",
+  "url": "https://zkwordle.com",
+  "twitter": {
+    "username": "@hyperspaceGL",
+    "url": "https://twitter.com/hyperspaceGL"
+  }
+}
