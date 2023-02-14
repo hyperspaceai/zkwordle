@@ -8,6 +8,7 @@ import Keyboard from "@/components/Keyboard";
 import WordRow from "@/components/WordRow";
 import { useGuess } from "@/hooks/useGuess";
 import { useHasHydrated } from "@/hooks/useHydrated";
+import useWorker from "@/hooks/useWorker";
 import { GUESS_LENGTH, useGameStore } from "@/store/store";
 import { calculateResetInterval } from "@/utils/time";
 
@@ -16,6 +17,7 @@ const timeUntilNextGame = calculateResetInterval();
 const Home = () => {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
+  const worker = useWorker();
   const [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType] = useGuess();
 
   const [error, setError] = useState("");
@@ -34,6 +36,32 @@ const Home = () => {
           setError(err.message);
         }
       });
+  };
+
+  const validateGuesses = async (solution: string, guesses: string[], output: number[][]) => {
+    if (worker) {
+      worker.postMessage({
+        action: "validateGuesses",
+        args: [
+          new TextEncoder().encode(solution),
+          new TextEncoder().encode(guesses.join(",")),
+          Uint8Array.from(output.flat()),
+        ],
+      });
+      return new Promise((resolve) => {
+        worker.addEventListener("message", (e) => {
+          const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
+          if (operation === "result" && action === "validateGuesses") {
+            resolve(result);
+          }
+        });
+      });
+    }
+  };
+
+  const handleButtonPress = async (solution: string, guesses: string[], output: number[][]) => {
+    const test = await validateGuesses(solution, guesses, output);
+    console.log({ test });
   };
 
   useEffect(() => {
@@ -94,6 +122,24 @@ const Home = () => {
               }
             }}
           />
+
+          <button
+            className="px-2 bg-red-200 rounded"
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={() =>
+              handleButtonPress(
+                "weary",
+                ["wordy", "weary"],
+                [
+                  [2, 0, 1, 0, 2],
+                  [2, 2, 2, 2, 2],
+                ],
+              )
+            }
+            type="button"
+          >
+            test me
+          </button>
 
           {isGameOver && !checkingGuess && <GameModal showInvalidGuess={showInvalidGuess} state={state} />}
           {showInvalidGuess && <ErrorModal />}

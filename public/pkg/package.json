@@ -1,0 +1,15 @@
+{
+  "name": "browser-snarks",
+  "collaborators": [
+    "Kartik Nair <kartikajitnair@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "browser_snarks_bg.wasm",
+    "browser_snarks.js",
+    "browser_snarks.d.ts"
+  ],
+  "module": "browser_snarks.js",
+  "types": "browser_snarks.d.ts",
+  "sideEffects": false
+}
