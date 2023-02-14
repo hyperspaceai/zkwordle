@@ -2,13 +2,55 @@ import { useEffect, useRef } from "react";
 
 import { initDb, STORE_NAME } from "@/utils/db/idb";
 
+interface ValidateGuessResponse {
+  proof: { bytes: Uint8Array; inputs: Uint8Array };
+  result: boolean;
+}
+
 const useWorker = () => {
   const workerRef = useRef<Worker>();
+
+  const validateGuesses = async (solution: string, guesses: string[], output: number[][]) => {
+    if (!workerRef.current) return;
+
+    workerRef.current.postMessage({
+      action: "validateGuesses",
+      args: [
+        new TextEncoder().encode(solution),
+        new TextEncoder().encode(guesses.join(",")),
+        Uint8Array.from(output.flat()),
+      ],
+    });
+    return new Promise<ValidateGuessResponse>((resolve) => {
+      workerRef.current?.addEventListener("message", (e) => {
+        const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
+        if (operation === "result" && action === "validateGuesses") {
+          resolve(result as ValidateGuessResponse);
+        }
+      });
+    });
+  };
+
+  const verifyProof = (proof: { bytes: Uint8Array; inputs: Uint8Array }) => {
+    if (workerRef.current) {
+      workerRef.current.postMessage({
+        action: "verify",
+        args: [proof],
+      });
+      return new Promise((resolve) => {
+        workerRef.current?.addEventListener("message", (e) => {
+          const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
+          if (operation === "result" && action === "verify") {
+            resolve(result);
+          }
+        });
+      });
+    }
+  };
 
   useEffect(() => {
     workerRef.current = new Worker("/worker.js", { type: "module" });
     workerRef.current.onmessage = async (e) => {
-      console.log("workerRef.current.onmessage", e);
       const { responseBuffer, operation, args } = e.data as {
         responseBuffer: ArrayBuffer;
         operation: string;
@@ -55,7 +97,7 @@ const useWorker = () => {
     };
   }, []);
 
-  return workerRef.current;
+  return { worker: workerRef.current, validateGuesses, verifyProof };
 };
 
 export default useWorker;

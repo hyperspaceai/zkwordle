@@ -17,7 +17,7 @@ const timeUntilNextGame = calculateResetInterval();
 const Home = () => {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
-  const worker = useWorker();
+  const { validateGuesses, verifyProof } = useWorker();
   const [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType] = useGuess();
 
   const [error, setError] = useState("");
@@ -37,48 +37,6 @@ const Home = () => {
         }
       });
   };
-  interface ValidateGuessResponse {
-    proof: { bytes: Uint8Array; inputs: Uint8Array };
-    result: boolean;
-  }
-
-  const validateGuesses = async (solution: string, guesses: string[], output: number[][]) => {
-    if (!worker) return;
-
-    worker.postMessage({
-      action: "validateGuesses",
-      args: [
-        new TextEncoder().encode(solution),
-        new TextEncoder().encode(guesses.join(",")),
-        Uint8Array.from(output.flat()),
-      ],
-    });
-    return new Promise<ValidateGuessResponse>((resolve) => {
-      worker.addEventListener("message", (e) => {
-        const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
-        if (operation === "result" && action === "validateGuesses") {
-          resolve(result as ValidateGuessResponse);
-        }
-      });
-    });
-  };
-
-  const verifyProof = (proof: { bytes: Uint8Array; inputs: Uint8Array }) => {
-    if (worker) {
-      worker.postMessage({
-        action: "verify",
-        args: [proof],
-      });
-      return new Promise((resolve) => {
-        worker.addEventListener("message", (e) => {
-          const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
-          if (operation === "result" && action === "verify") {
-            resolve(result);
-          }
-        });
-      });
-    }
-  };
 
   const handleButtonPress = async (solution: string, guesses: string[], output: number[][]) => {
     const data = await validateGuesses(solution, guesses, output);
@@ -91,7 +49,6 @@ const Home = () => {
 
   useEffect(() => {
     fetchWord();
-
     // ensure the date is reset at midnight UTC if user does not refresh before then
     const interval = setInterval(() => {
       fetchWord();
