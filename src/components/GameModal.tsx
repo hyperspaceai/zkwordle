@@ -7,6 +7,7 @@ interface GameModal {
   state: GameState;
   showInvalidGuess: boolean;
 }
+
 const GameModal = ({ state, showInvalidGuess }: GameModal) => {
   return (
     <div
@@ -18,6 +19,15 @@ const GameModal = ({ state, showInvalidGuess }: GameModal) => {
         {state.gameState === "won" ? "Game Won" : "Game Over"}
       </p>
       <WordRow className="items-center justify-items-center" invalidWord={showInvalidGuess} letters={state.answer} />
+      <button
+        className="border border-emerald-500 rounded bg-emerald-500 p-2 mt-4 text-white shadow"
+        onClick={() => {
+          state.newGame({ answer: "react", gameId: 9999 });
+        }}
+        type="button"
+      >
+        New Game
+      </button>
 
       <TweetMessage guesses={state.rows} />
     </div>

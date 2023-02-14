@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 import { initDb, STORE_NAME } from "@/utils/db/idb";
 
-interface ValidateGuessResponse {
+export interface ValidateGuessResponse {
   proof: { bytes: Uint8Array; inputs: Uint8Array };
   result: boolean;
 }

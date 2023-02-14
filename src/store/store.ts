@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import type { ValidateGuessResponse } from "@/hooks/useWorker";
+
 import { computeGuess, getRandomWord, LetterState } from "../utils/word";
 
 export const NUMBER_OF_GUESSES = 6;
@@ -9,7 +11,7 @@ export const GUESS_LENGTH = 6;
 
 export interface GuessRow {
   word: string;
-  result?: LetterState[];
+  result: LetterState[];
 }
 
 export interface GameState {
@@ -19,8 +21,10 @@ export interface GameState {
   rows: GuessRow[];
   gameState: "playing" | "won" | "lost";
   keyboardLetterState: Record<string, LetterState>;
-  addGuess: (guess: string) => void;
+  addGuess: (guess: string) => { gameState: GameState["gameState"]; answer: string; rows: GameState["rows"] };
   newGame: ({ answer, gameId }: { answer: string; gameId: number }) => void;
+  validGuess?: ValidateGuessResponse;
+  validateProof: (proof: ValidateGuessResponse["proof"], result: ValidateGuessResponse["result"]) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -75,6 +79,7 @@ export const useGameStore = create<GameState>()(
             gameState,
           };
         });
+        return { gameState: get().gameState, answer: get().answer, rows: get().rows };
       };
       const newGame = ({ answer, gameId }: { answer: string; gameId: number }) => {
         set({
@@ -85,6 +90,9 @@ export const useGameStore = create<GameState>()(
           keyboardLetterState: {},
         });
       };
+      const validateProof = (proof: ValidateGuessResponse["proof"], result: ValidateGuessResponse["result"]) => {
+        set({ validGuess: { proof, result } });
+      };
       return {
         answer: getRandomWord(),
         gameId: 0,
@@ -94,6 +102,7 @@ export const useGameStore = create<GameState>()(
         keyboardLetterState: {},
         addGuess,
         newGame,
+        validateProof,
       };
     },
 

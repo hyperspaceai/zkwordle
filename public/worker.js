@@ -602,8 +602,6 @@ const appRes = await fetch("./pkg/release.wasm");
 const appBuffer = await appRes.arrayBuffer();
 const wasmBinary = new Uint8Array(appBuffer);
 
-console.log(wasmBinary);
-
 self.onmessage = (e) => {
   let { action, args } = e.data;
   // console.log("received message: ", action, args);

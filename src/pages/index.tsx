@@ -8,7 +8,6 @@ import Keyboard from "@/components/Keyboard";
 import WordRow from "@/components/WordRow";
 import { useGuess } from "@/hooks/useGuess";
 import { useHasHydrated } from "@/hooks/useHydrated";
-import useWorker from "@/hooks/useWorker";
 import { GUESS_LENGTH, useGameStore } from "@/store/store";
 import { calculateResetInterval } from "@/utils/time";
 
@@ -17,7 +16,7 @@ const timeUntilNextGame = calculateResetInterval();
 const Home = () => {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
-  const { validateGuesses, verifyProof } = useWorker();
+
   const [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType] = useGuess();
 
   const [error, setError] = useState("");
@@ -38,14 +37,14 @@ const Home = () => {
       });
   };
 
-  const handleButtonPress = async (solution: string, guesses: string[], output: number[][]) => {
-    const data = await validateGuesses(solution, guesses, output);
-    if (!data) return;
-    const { proof, result } = data;
-    console.log({ proof, result });
-    const verified = await verifyProof(proof);
-    console.log({ verified });
-  };
+  // const handleButtonPress = async (solution: string, guesses: string[], output: number[][]) => {
+  //   const data = await validateGuesses(solution, guesses, output);
+  //   if (!data) return;
+  //   const { proof, result } = data;
+  //   console.log({ proof, result });
+  //   const verified = await verifyProof(proof);
+  //   console.log({ verified });
+  // };
 
   useEffect(() => {
     fetchWord();
@@ -60,7 +59,7 @@ const Home = () => {
   let rows = [...state.rows];
   let currentRow = 0;
   if (rows.length < GUESS_LENGTH) {
-    currentRow = rows.push({ word: guess }) - 1;
+    currentRow = rows.push({ word: guess, result: [] }) - 1;
   }
 
   const numberOfGuessesRemaining = GUESS_LENGTH - rows.length;
@@ -105,7 +104,7 @@ const Home = () => {
             }}
           />
 
-          <button
+          {/* <button
             className="px-2 bg-red-200 rounded"
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={() =>
@@ -122,7 +121,7 @@ const Home = () => {
             type="button"
           >
             test me
-          </button>
+          </button> */}
 
           {isGameOver && !checkingGuess && <GameModal showInvalidGuess={showInvalidGuess} state={state} />}
           {showInvalidGuess && <ErrorModal />}

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { useGameStore } from "@/store/store";
+import { GameState, GuessRow, useGameStore } from "@/store/store";
 import { isValidWord, LETTER_LENGTH } from "@/utils/word";
 
 import { usePrevious } from "./usePrevious";
+import useWorker from "./useWorker";
 
 export const useGuess = (): [
   string,
@@ -19,7 +20,20 @@ export const useGuess = (): [
   const [checkingGuess, setCheckingGuess] = useState(false);
   const [canType, setCanType] = useState(true);
   const addGuess = useGameStore((s) => s.addGuess);
+  const updateProofState = useGameStore((s) => s.validateProof);
   const prevGuess = usePrevious(guess);
+
+  const { validateGuesses } = useWorker();
+
+  const handleValidateGuesses = async (gameState: GameState["gameState"], answer: string, rows: GuessRow[]) => {
+    if (gameState === "playing") return;
+    const words = rows.map((r) => r.word);
+    const results = rows.map((r) => r.result);
+    const data = await validateGuesses(answer, words, results);
+    if (!data) return;
+    const { proof, result } = data;
+    updateProofState(proof, result);
+  };
 
   useEffect(() => {
     let id: NodeJS.Timeout;
@@ -47,7 +61,12 @@ export const useGuess = (): [
         return setGuess(prevGuess);
       }
       if (isValidWord(prevGuess)) {
-        addGuess(prevGuess);
+        const currentState = addGuess(prevGuess);
+        if (currentState.gameState !== "playing") {
+          handleValidateGuesses(currentState.gameState, currentState.answer, currentState.rows).catch((e) => {
+            console.log(e);
+          });
+        }
         setCheckingGuess(true);
         setCanType(false);
         setInvalidGuess(false);
