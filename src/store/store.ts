@@ -21,7 +21,12 @@ export interface GameState {
   rows: GuessRow[];
   gameState: "playing" | "won" | "lost";
   keyboardLetterState: Record<string, LetterState>;
-  addGuess: (guess: string) => { gameState: GameState["gameState"]; answer: string; rows: GameState["rows"] };
+  addGuess: (guess: string) => {
+    gameState: GameState["gameState"];
+    gameId: number;
+    answer: string;
+    rows: GameState["rows"];
+  };
   newGame: ({ answer, gameId }: { answer: string; gameId: number }) => void;
   validGuess?: ValidateGuessResponse;
   validateProof: (proof: ValidateGuessResponse["proof"], result: ValidateGuessResponse["result"]) => void;
@@ -79,7 +84,7 @@ export const useGameStore = create<GameState>()(
             gameState,
           };
         });
-        return { gameState: get().gameState, answer: get().answer, rows: get().rows };
+        return { gameState: get().gameState, answer: get().answer, gameId: get().gameId, rows: get().rows };
       };
       const newGame = ({ answer, gameId }: { answer: string; gameId: number }) => {
         set({

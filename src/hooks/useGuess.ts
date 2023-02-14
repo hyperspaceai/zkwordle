@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { GameState, GuessRow, useGameStore } from "@/store/store";
-import { isValidWord, LETTER_LENGTH } from "@/utils/word";
+import type { GameState, GuessRow } from "@/store/store";
+import { useGameStore } from "@/store/store";
+import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
@@ -25,14 +26,33 @@ export const useGuess = (): [
 
   const { validateGuesses } = useWorker();
 
-  const handleValidateGuesses = async (gameState: GameState["gameState"], answer: string, rows: GuessRow[]) => {
+  const handleValidateGuesses = async (
+    gameState: GameState["gameState"],
+    gameId: number,
+    answer: string,
+    rows: GuessRow[],
+  ) => {
     if (gameState === "playing") return;
     const words = rows.map((r) => r.word);
     const results = rows.map((r) => r.result);
+
+    const start = performance.now();
     const data = await validateGuesses(answer, words, results);
+    const end = performance.now();
+    const timeTaken = end - start;
     if (!data) return;
     const { proof, result } = data;
+
     updateProofState(proof, result);
+    await addValidProofToDB({
+      gameId,
+      answer,
+      gameState,
+      guesses: words,
+      timeTaken: Math.ceil(timeTaken),
+      bytes: proof.bytes,
+      input: proof.inputs,
+    });
   };
 
   useEffect(() => {
@@ -63,7 +83,12 @@ export const useGuess = (): [
       if (isValidWord(prevGuess)) {
         const currentState = addGuess(prevGuess);
         if (currentState.gameState !== "playing") {
-          handleValidateGuesses(currentState.gameState, currentState.answer, currentState.rows).catch((e) => {
+          handleValidateGuesses(
+            currentState.gameState,
+            currentState.gameId,
+            currentState.answer,
+            currentState.rows,
+          ).catch((e) => {
             console.log(e);
           });
         }
@@ -75,6 +100,7 @@ export const useGuess = (): [
         setGuess(prevGuess);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guess]);
 
   const addGuessLetter = (letter: string) => {
