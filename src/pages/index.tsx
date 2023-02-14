@@ -37,21 +37,42 @@ const Home = () => {
         }
       });
   };
+  interface ValidateGuessResponse {
+    proof: { bytes: Uint8Array; inputs: Uint8Array };
+    result: boolean;
+  }
 
   const validateGuesses = async (solution: string, guesses: string[], output: number[][]) => {
+    if (!worker) return;
+
+    worker.postMessage({
+      action: "validateGuesses",
+      args: [
+        new TextEncoder().encode(solution),
+        new TextEncoder().encode(guesses.join(",")),
+        Uint8Array.from(output.flat()),
+      ],
+    });
+    return new Promise<ValidateGuessResponse>((resolve) => {
+      worker.addEventListener("message", (e) => {
+        const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
+        if (operation === "result" && action === "validateGuesses") {
+          resolve(result as ValidateGuessResponse);
+        }
+      });
+    });
+  };
+
+  const verifyProof = (proof: { bytes: Uint8Array; inputs: Uint8Array }) => {
     if (worker) {
       worker.postMessage({
-        action: "validateGuesses",
-        args: [
-          new TextEncoder().encode(solution),
-          new TextEncoder().encode(guesses.join(",")),
-          Uint8Array.from(output.flat()),
-        ],
+        action: "verify",
+        args: [proof],
       });
       return new Promise((resolve) => {
         worker.addEventListener("message", (e) => {
           const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
-          if (operation === "result" && action === "validateGuesses") {
+          if (operation === "result" && action === "verify") {
             resolve(result);
           }
         });
@@ -60,8 +81,12 @@ const Home = () => {
   };
 
   const handleButtonPress = async (solution: string, guesses: string[], output: number[][]) => {
-    const test = await validateGuesses(solution, guesses, output);
-    console.log({ test });
+    const data = await validateGuesses(solution, guesses, output);
+    if (!data) return;
+    const { proof, result } = data;
+    console.log({ proof, result });
+    const verified = await verifyProof(proof);
+    console.log({ verified });
   };
 
   useEffect(() => {
@@ -129,8 +154,9 @@ const Home = () => {
             onClick={() =>
               handleButtonPress(
                 "weary",
-                ["wordy", "weary"],
+                ["wordy", "wordy", "weary"],
                 [
+                  [2, 0, 1, 0, 2],
                   [2, 0, 1, 0, 2],
                   [2, 2, 2, 2, 2],
                 ],

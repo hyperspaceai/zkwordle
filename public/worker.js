@@ -611,7 +611,6 @@ self.onmessage = (e) => {
     let result = verify(args[0]);
     postMessage({ operation: "result", action, result });
   } else {
-    console.log({ wasmBinary, action, args });
     let result = execute(wasmBinary, action, args);
     postMessage({ operation: "result", action, result });
   }
