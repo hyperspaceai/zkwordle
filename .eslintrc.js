@@ -15,7 +15,7 @@ const eslintConfig = {
     globalThis: "writeable",
     SharedArrayBuffer: "readonly",
   },
-  ignorePatterns: [".next", "__generated__", "node_modules", "out"],
+  ignorePatterns: [".next", "__generated__", "node_modules", "out", "public/worker.js"],
   parserOptions: {
     project: getTsconfigPath(),
   },

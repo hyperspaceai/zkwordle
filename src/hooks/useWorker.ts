@@ -42,6 +42,9 @@ const useWorker = () => {
           //   console.log(args[0]);
           return;
         }
+        case "result": {
+          return;
+        }
       }
 
       Atomics.notify(i32, 0);
