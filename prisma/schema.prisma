@@ -27,8 +27,8 @@ model Proof {
   guesses   String[]
   timeTaken Int
 
-  bytes Json
-  input Json
+  bytes Bytes
+  input Bytes
 
   createdAt DateTime @default(now())
 }

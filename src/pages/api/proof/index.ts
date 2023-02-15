@@ -1,7 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import type { GameState } from "@/store/store";
 import { prisma } from "@/utils/db/prisma";
-import type { ValidProofInput } from "@/utils/word";
+
+interface ValidProofRequestBody {
+  gameId: number;
+  answer: string;
+  gameState: Exclude<GameState["gameState"], "playing">;
+  guesses: string[];
+  timeTaken: number;
+  bytes: Record<string, number>;
+  input: Record<string, number>;
+}
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // check if request authorization header
@@ -16,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (ACTION_KEY !== APP_KEY) return res.status(401).end();
 
   if (req.method === "POST") {
-    const { gameId, answer, gameState, guesses, timeTaken, bytes, input } = req.body as ValidProofInput;
+    const { gameId, answer, gameState, guesses, timeTaken, bytes, input } = req.body as ValidProofRequestBody;
 
     if (
       !gameId ||
@@ -31,6 +41,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: "Invalid body" });
     }
 
+    const buffer = Object.values(input);
+    const buffer2 = Buffer.from(buffer);
+    const buffer3 = Uint8Array.from(buffer2);
+
     try {
       const proof = await prisma.proof.create({
         data: {
@@ -39,8 +53,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           gameState,
           guesses,
           timeTaken,
-          bytes: JSON.stringify(bytes),
-          input: JSON.stringify(input),
+          bytes: Buffer.from(Object.values(bytes)),
+          input: Buffer.from(Object.values(input)),
         },
       });
 
