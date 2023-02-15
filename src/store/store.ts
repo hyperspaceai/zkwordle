@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import type { ValidateGuessResponse } from "@/hooks/useWorker";
+
 import { computeGuess, getRandomWord, LetterState } from "../utils/word";
 
 export const NUMBER_OF_GUESSES = 6;
@@ -9,8 +11,10 @@ export const GUESS_LENGTH = 6;
 
 export interface GuessRow {
   word: string;
-  result?: LetterState[];
+  result: LetterState[];
 }
+
+type ValidateGuessResponseWithNumbers = ValidateGuessResponse & { proving_time: number; execution_time: number };
 
 export interface GameState {
   answer: string;
@@ -19,8 +23,21 @@ export interface GameState {
   rows: GuessRow[];
   gameState: "playing" | "won" | "lost";
   keyboardLetterState: Record<string, LetterState>;
-  addGuess: (guess: string) => void;
+  addGuess: (guess: string) => {
+    gameState: GameState["gameState"];
+    gameId: number;
+    answer: string;
+    rows: GameState["rows"];
+  };
   newGame: ({ answer, gameId }: { answer: string; gameId: number }) => void;
+  validGuess?: ValidateGuessResponseWithNumbers;
+  timeTaken?: number;
+  validateProof: (
+    proof: ValidateGuessResponse["proof"],
+    result: ValidateGuessResponse["result"],
+    proving_time: number,
+    execution_time: number,
+  ) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -75,6 +92,7 @@ export const useGameStore = create<GameState>()(
             gameState,
           };
         });
+        return { gameState: get().gameState, answer: get().answer, gameId: get().gameId, rows: get().rows };
       };
       const newGame = ({ answer, gameId }: { answer: string; gameId: number }) => {
         set({
@@ -85,6 +103,14 @@ export const useGameStore = create<GameState>()(
           keyboardLetterState: {},
         });
       };
+      const validateProof = (
+        proof: ValidateGuessResponseWithNumbers["proof"],
+        result: ValidateGuessResponseWithNumbers["result"],
+        proving_time: ValidateGuessResponseWithNumbers["proving_time"],
+        execution_time: ValidateGuessResponseWithNumbers["execution_time"],
+      ) => {
+        set({ validGuess: { proof, result, proving_time, execution_time } });
+      };
       return {
         answer: getRandomWord(),
         gameId: 0,
@@ -94,11 +120,12 @@ export const useGameStore = create<GameState>()(
         keyboardLetterState: {},
         addGuess,
         newGame,
+        validateProof,
       };
     },
 
     {
-      name: "hordale",
+      name: "zkWordle",
     },
   ),
 );

@@ -18,3 +18,23 @@ model Word {
 
   createdAt DateTime @default(now())
 }
+
+model Proof {
+  id            String    @id @default(cuid())
+  gameId        Int
+  answer        String
+  gameState     GameState
+  guesses       String[]
+  provingTime   Int
+  executionTime Int
+
+  bytes Bytes
+  input Bytes
+
+  createdAt DateTime @default(now())
+}
+
+enum GameState {
+  lost
+  won
+}

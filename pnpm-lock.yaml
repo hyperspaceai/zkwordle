@@ -10,6 +10,7 @@ specifiers:
   autoprefixer: ^10.4.13
   eslint: 8.33.0
   eslint-config-next: 13.1.6
+  idb: ^7.1.1
   next: 13.1.6
   postcss: ^8.4.21
   prisma: ^4.10.1
@@ -28,6 +29,7 @@ dependencies:
   '@types/react-dom': 18.0.10
   eslint: 8.33.0
   eslint-config-next: 13.1.6_4vsywjlpuriuw3tl5oq6zy5a64
+  idb: 7.1.1
   next: 13.1.6_pjwopsidmaokadturxaafygjp4
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -2056,6 +2058,10 @@ packages:
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
     dev: true
+
+  /idb/7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
+    dev: false
 
   /ignore/5.2.4:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}

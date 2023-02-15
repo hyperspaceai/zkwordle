@@ -1,3 +1,4 @@
+import { GameState } from "@/store/store";
 import wordBank from "./word-bank.json";
 
 export const LETTER_LENGTH = 5;
@@ -43,4 +44,45 @@ export const getRandomWord = () => {
 
 export const isValidWord = (word: string): boolean => {
   return wordBank.valid.concat(wordBank.invalid).includes(word);
+};
+
+export interface ValidProofInput {
+  gameId: number;
+  answer: string;
+  gameState: Exclude<GameState["gameState"], "playing">;
+  guesses: string[];
+  provingTime: number;
+  executionTime: number;
+  bytes: Uint8Array;
+  input: Uint8Array;
+}
+
+export const addValidProofToDB = async ({
+  gameId,
+  answer,
+  gameState,
+  guesses,
+  provingTime,
+  executionTime,
+  bytes,
+  input,
+}: ValidProofInput) => {
+  const res = await fetch("/api/proof", {
+    method: "POST",
+    body: JSON.stringify({
+      gameId,
+      answer,
+      gameState,
+      guesses,
+      provingTime,
+      executionTime,
+      bytes,
+      input,
+    }),
+    headers: {
+      authorization: `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}`,
+      "Content-Type": "application/json",
+    },
+  });
+  return res;
 };

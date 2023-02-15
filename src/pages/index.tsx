@@ -16,6 +16,7 @@ const timeUntilNextGame = calculateResetInterval();
 const Home = () => {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
+
   const [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType] = useGuess();
 
   const [error, setError] = useState("");
@@ -36,9 +37,17 @@ const Home = () => {
       });
   };
 
+  // const handleButtonPress = async (solution: string, guesses: string[], output: number[][]) => {
+  //   const data = await validateGuesses(solution, guesses, output);
+  //   if (!data) return;
+  //   const { proof, result } = data;
+  //   console.log({ proof, result });
+  //   const verified = await verifyProof(proof);
+  //   console.log({ verified });
+  // };
+
   useEffect(() => {
     fetchWord();
-
     // ensure the date is reset at midnight UTC if user does not refresh before then
     const interval = setInterval(() => {
       fetchWord();
@@ -50,7 +59,7 @@ const Home = () => {
   let rows = [...state.rows];
   let currentRow = 0;
   if (rows.length < GUESS_LENGTH) {
-    currentRow = rows.push({ word: guess }) - 1;
+    currentRow = rows.push({ word: guess, result: [] }) - 1;
   }
 
   const numberOfGuessesRemaining = GUESS_LENGTH - rows.length;
@@ -94,6 +103,25 @@ const Home = () => {
               }
             }}
           />
+
+          {/* <button
+            className="px-2 bg-red-200 rounded"
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={() =>
+              handleButtonPress(
+                "weary",
+                ["wordy", "wordy", "weary"],
+                [
+                  [2, 0, 1, 0, 2],
+                  [2, 0, 1, 0, 2],
+                  [2, 2, 2, 2, 2],
+                ],
+              )
+            }
+            type="button"
+          >
+            test me
+          </button> */}
 
           {isGameOver && !checkingGuess && <GameModal showInvalidGuess={showInvalidGuess} state={state} />}
           {showInvalidGuess && <ErrorModal />}
