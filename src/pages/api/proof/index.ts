@@ -8,7 +8,8 @@ interface ValidProofRequestBody {
   answer: string;
   gameState: Exclude<GameState["gameState"], "playing">;
   guesses: string[];
-  timeTaken: number;
+  provingTime: number;
+  executionTime: number;
   bytes: Record<string, number>;
   input: Record<string, number>;
 }
@@ -26,7 +27,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (ACTION_KEY !== APP_KEY) return res.status(401).end();
 
   if (req.method === "POST") {
-    const { gameId, answer, gameState, guesses, timeTaken, bytes, input } = req.body as ValidProofRequestBody;
+    const { gameId, answer, gameState, guesses, provingTime, executionTime, bytes, input } =
+      req.body as ValidProofRequestBody;
 
     if (
       !gameId ||
@@ -34,16 +36,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       !gameState ||
       guesses.length === 0 ||
-      !timeTaken ||
+      !provingTime ||
+      !executionTime ||
       bytes.length === 0 ||
       input.length === 0
     ) {
       return res.status(400).json({ error: "Invalid body" });
     }
-
-    const buffer = Object.values(input);
-    const buffer2 = Buffer.from(buffer);
-    const buffer3 = Uint8Array.from(buffer2);
 
     try {
       const proof = await prisma.proof.create({
@@ -52,7 +51,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           answer,
           gameState,
           guesses,
-          timeTaken,
+          provingTime,
+          executionTime,
           bytes: Buffer.from(Object.values(bytes)),
           input: Buffer.from(Object.values(input)),
         },

@@ -1,3 +1,5 @@
+/* tslint:disable */
+/* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function wat_to_bytecode(a: number): number;
 export function compile_wat(a: number): number;

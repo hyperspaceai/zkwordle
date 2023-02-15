@@ -36,20 +36,19 @@ export const useGuess = (): [
     const words = rows.map((r) => r.word);
     const results = rows.map((r) => r.result);
 
-    const start = performance.now();
     const data = await validateGuesses(answer, words, results);
-    const end = performance.now();
-    const timeTaken = Math.ceil(end - start);
     if (!data) return;
-    const { proof, result } = data;
 
-    updateProofState(proof, result, timeTaken);
+    const { proof, result, proving_time, execution_time } = data;
+
+    updateProofState(proof, result, Number(proving_time), Number(execution_time));
     await addValidProofToDB({
       gameId,
       answer,
       gameState,
       guesses: words,
-      timeTaken: Math.ceil(timeTaken),
+      provingTime: Number(proving_time),
+      executionTime: Number(execution_time),
       bytes: proof.bytes,
       input: proof.inputs,
     });

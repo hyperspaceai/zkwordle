@@ -5,6 +5,8 @@ import { initDb, STORE_NAME } from "@/utils/db/idb";
 export interface ValidateGuessResponse {
   proof: { bytes: Uint8Array; inputs: Uint8Array };
   result: boolean;
+  proving_time: bigint;
+  execution_time: bigint;
 }
 
 const useWorker = () => {

@@ -14,6 +14,8 @@ export interface GuessRow {
   result: LetterState[];
 }
 
+type ValidateGuessResponseWithNumbers = ValidateGuessResponse & { proving_time: number; execution_time: number };
+
 export interface GameState {
   answer: string;
   gameId: number;
@@ -28,12 +30,13 @@ export interface GameState {
     rows: GameState["rows"];
   };
   newGame: ({ answer, gameId }: { answer: string; gameId: number }) => void;
-  validGuess?: ValidateGuessResponse;
+  validGuess?: ValidateGuessResponseWithNumbers;
   timeTaken?: number;
   validateProof: (
     proof: ValidateGuessResponse["proof"],
     result: ValidateGuessResponse["result"],
-    timeTaken: number,
+    proving_time: number,
+    execution_time: number,
   ) => void;
 }
 
@@ -101,11 +104,12 @@ export const useGameStore = create<GameState>()(
         });
       };
       const validateProof = (
-        proof: ValidateGuessResponse["proof"],
-        result: ValidateGuessResponse["result"],
-        timeTaken: number,
+        proof: ValidateGuessResponseWithNumbers["proof"],
+        result: ValidateGuessResponseWithNumbers["result"],
+        proving_time: ValidateGuessResponseWithNumbers["proving_time"],
+        execution_time: ValidateGuessResponseWithNumbers["execution_time"],
       ) => {
-        set({ validGuess: { proof, result }, timeTaken });
+        set({ validGuess: { proof, result, proving_time, execution_time } });
       };
       return {
         answer: getRandomWord(),

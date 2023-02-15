@@ -46,22 +46,24 @@ export const isValidWord = (word: string): boolean => {
   return wordBank.valid.concat(wordBank.invalid).includes(word);
 };
 
-export type ValidProofInput = {
+export interface ValidProofInput {
   gameId: number;
   answer: string;
   gameState: Exclude<GameState["gameState"], "playing">;
   guesses: string[];
-  timeTaken: number;
+  provingTime: number;
+  executionTime: number;
   bytes: Uint8Array;
   input: Uint8Array;
-};
+}
 
 export const addValidProofToDB = async ({
   gameId,
   answer,
   gameState,
   guesses,
-  timeTaken,
+  provingTime,
+  executionTime,
   bytes,
   input,
 }: ValidProofInput) => {
@@ -72,7 +74,8 @@ export const addValidProofToDB = async ({
       answer,
       gameState,
       guesses,
-      timeTaken,
+      provingTime,
+      executionTime,
       bytes,
       input,
     }),
