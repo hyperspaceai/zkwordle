@@ -39,11 +39,11 @@ export const useGuess = (): [
     const start = performance.now();
     const data = await validateGuesses(answer, words, results);
     const end = performance.now();
-    const timeTaken = end - start;
+    const timeTaken = Math.ceil(end - start);
     if (!data) return;
     const { proof, result } = data;
 
-    updateProofState(proof, result);
+    updateProofState(proof, result, timeTaken);
     await addValidProofToDB({
       gameId,
       answer,

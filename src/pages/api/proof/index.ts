@@ -18,10 +18,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { gameId, answer, gameState, guesses, timeTaken, bytes, input } = req.body as ValidProofInput;
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (
       !gameId ||
       !answer ||
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       !gameState ||
       guesses.length === 0 ||
       !timeTaken ||

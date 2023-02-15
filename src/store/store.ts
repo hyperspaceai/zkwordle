@@ -29,7 +29,12 @@ export interface GameState {
   };
   newGame: ({ answer, gameId }: { answer: string; gameId: number }) => void;
   validGuess?: ValidateGuessResponse;
-  validateProof: (proof: ValidateGuessResponse["proof"], result: ValidateGuessResponse["result"]) => void;
+  timeTaken?: number;
+  validateProof: (
+    proof: ValidateGuessResponse["proof"],
+    result: ValidateGuessResponse["result"],
+    timeTaken: number,
+  ) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -95,8 +100,12 @@ export const useGameStore = create<GameState>()(
           keyboardLetterState: {},
         });
       };
-      const validateProof = (proof: ValidateGuessResponse["proof"], result: ValidateGuessResponse["result"]) => {
-        set({ validGuess: { proof, result } });
+      const validateProof = (
+        proof: ValidateGuessResponse["proof"],
+        result: ValidateGuessResponse["result"],
+        timeTaken: number,
+      ) => {
+        set({ validGuess: { proof, result }, timeTaken });
       };
       return {
         answer: getRandomWord(),
@@ -112,7 +121,7 @@ export const useGameStore = create<GameState>()(
     },
 
     {
-      name: "hordale",
+      name: "zkWordle",
     },
   ),
 );
