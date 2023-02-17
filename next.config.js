@@ -1,5 +1,8 @@
 // @ts-check
 /// <reference path="./env.d.ts" />
+/// <reference path="./vercel.d.ts" />
+
+require("./scripts/favicons");
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {

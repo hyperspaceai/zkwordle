@@ -1,0 +1,28 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["gen:tokens"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "dependsOn": ["gen:tokens"],
+      "cache": false
+    },
+    "export": {
+      "dependsOn": ["build"],
+      "outputs": ["out/**"]
+    },
+    "gen:tokens": {
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": ["gen:tokens"],
+      "outputs": []
+    },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false
+    }
+  }
+}
