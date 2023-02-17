@@ -1,10 +1,13 @@
-import { LetterState } from "@/utils/word";
 import { Center, Text } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
+
+import { LetterState } from "@/utils/word";
 
 interface CharacterBoxProps {
   value?: string;
   state?: LetterState;
+  checkingGuess: boolean;
+  currentIndex: number;
   index: number;
 }
 
@@ -12,25 +15,21 @@ interface CharacterBoxProps {
 const defaultBorderColor = "#2D3748";
 
 // fontColor = ChakraUI's whitealpha.900 and blackalpha.900
-const fontWhite = "RGBA(255, 255, 255, 0.92)";
 const fontBlack = "RGBA(0, 0, 0, 0.92)";
 
-const CharacterTile = ({ value, state, index }: CharacterBoxProps) => {
+const CharacterTile = ({ value, state, checkingGuess, index, currentIndex }: CharacterBoxProps) => {
   // function mapColor is used to change the default html color for custom hex color
-  const mapColor = (state: LetterState | undefined) => {
-    if (state === undefined) {
-      return "transparent";
+  const mapColor = (letterState: LetterState | undefined) => {
+    switch (letterState) {
+      case LetterState.Miss:
+        return "#D4D4D8";
+      case LetterState.Match:
+        return "#9AE6B4";
+      case LetterState.Present:
+        return "#FAF089";
+      default:
+        return "#fff";
     }
-    if (state === LetterState.Miss) {
-      return "#D4D4D8";
-    }
-    if (state === LetterState.Match) {
-      return "#9AE6B4";
-    }
-    if (state === LetterState.Present) {
-      return "#FAF089";
-    }
-    return "#fff";
   };
 
   // flip keyframes is used when the user submit a Wordle
@@ -73,26 +72,31 @@ const CharacterTile = ({ value, state, index }: CharacterBoxProps) => {
     }
   `;
 
-  let animation = `${bounce} 0.1s ease`;
+  let animation: string | undefined;
+  if (index === currentIndex) {
+    animation = `${bounce} 0.1s ease`;
+  }
   // when user press ENTER, change animation to flip animation
   if (state === LetterState.Miss || state === LetterState.Match || state === LetterState.Present) {
     animation = `${flip} 0.6s ease`;
   }
 
   // control animation delay, so that the tiles don't animate all at once
-  let delay = `${0.2 * index}s`;
-
+  let delay: string | undefined;
+  if (checkingGuess) {
+    delay = `${0.2 * index}s`;
+  }
   return (
     <Center
-      w={["50px", "55px", "60px"]}
-      h={["50px", "55px", "60px"]}
-      border="1px"
-      borderColor="gray.700"
       animation={animation}
-      userSelect="none"
+      border="1px"
+      borderColor="gray.300"
+      h={["50px", "55px", "60px"]}
       sx={{ animationDelay: delay, animationFillMode: "forwards" }} // backgroundColor come from animationFillMode forwards
+      userSelect="none"
+      w={["50px", "55px", "60px"]}
     >
-      <Text fontWeight="bold" fontSize="x-large">
+      <Text fontSize="x-large" fontWeight="bold">
         {value?.toUpperCase()}
       </Text>
     </Center>
@@ -115,14 +119,14 @@ const blink = keyframes`
 
 export const EmptyTile = ({ showCursor }: { showCursor?: boolean }) => (
   <Center
-    w={["50px", "55px", "60px"]}
-    h={["50px", "55px", "60px"]}
     border="1px"
-    borderColor={defaultBorderColor}
+    borderColor="gray.300"
+    h={["50px", "55px", "60px"]}
     userSelect="none"
+    w={["50px", "55px", "60px"]}
   >
     {showCursor && (
-      <Text fontSize="x-large" animation={`${blink} 2s infinite ease`}>
+      <Text animation={`${blink} 2s infinite ease`} fontSize="x-large">
         _
       </Text>
     )}

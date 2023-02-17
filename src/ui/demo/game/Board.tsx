@@ -1,12 +1,12 @@
+import { Flex, VStack } from "@chakra-ui/react";
+import type { Word } from "@prisma/client";
+import { useEffect, useState } from "react";
+
 import { useGuess } from "@/hooks/useGuess";
 import { useHasHydrated } from "@/hooks/useHydrated";
-import { useGameStore, GUESS_LENGTH } from "@/store/store";
+import { GUESS_LENGTH, useGameStore } from "@/store/store";
 import { calculateResetInterval } from "@/utils/time";
-import { Box, Flex, VStack } from "@chakra-ui/react";
-import { Word } from "@prisma/client";
-import { useState, useEffect } from "react";
-import ErrorModal from "./ErrorModal";
-import GameModal from "./GameModal";
+
 import Keyboard from "./Keyboard";
 import WordRow from "./WordRow";
 
@@ -16,7 +16,7 @@ const Board = () => {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
 
-  const { guess, setGuess, showInvalidGuess, canType, addGuessLetter } = useGuess();
+  const { guess, setGuess, showInvalidGuess, canType, addGuessLetter, checkingGuess } = useGuess();
 
   const [error, setError] = useState("");
 
@@ -55,29 +55,25 @@ const Board = () => {
   const numberOfGuessesRemaining = GUESS_LENGTH - rows.length;
   rows = rows.concat(Array(numberOfGuessesRemaining).fill(""));
 
-  const isGameOver = state.gameState !== "playing";
-
   // fixes hydration text error
   if (!hasHydrated) return null;
 
   return (
     <Flex
+      alignItems="center"
       flexDir="column"
       flexGrow={1}
       height="100%"
-      overflow={"hidden"}
-      alignItems="center"
       justifyContent="space-evenly"
+      overflow="hidden"
     >
-      {/* {isGameOver && !checkingGuess && (
-        <GameModal showInvalidGuess={showInvalidGuess} state={state} isGameOver={isGameOver} />
-      )} */}
       <VStack>
         {rows.map(({ word, result }, index) => (
           <WordRow
             key={word + String(index)}
             className={showInvalidGuess && index === currentRow ? "animate-bounce" : ""}
             currentRow={index === currentRow}
+            checkingGuess={checkingGuess}
             letters={word}
             result={result}
           />
