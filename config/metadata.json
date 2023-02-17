@@ -1,10 +1,10 @@
 {
-  "name": "ZK-WASM Wordle Demo",
+  "name": "ZK-WASM Demo",
   "shortName": "ZK-WASM Demo",
-  "description": "Wordle Demo",
-  "domain": "zkwordle.com",
+  "description": "Try and test the limits on our simulation",
+  "domain": "zk-wasm-demo.hyperspace.foundation",
   "email": "hey@hyperspace.foundation",
-  "url": "https://zkwordle.com",
+  "url": "https://zk-wasm-demo.hyperspace.foundation",
   "twitter": {
     "username": "@hyperspaceGL",
     "url": "https://twitter.com/hyperspaceGL"

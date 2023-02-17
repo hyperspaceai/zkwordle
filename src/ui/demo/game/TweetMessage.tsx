@@ -1,5 +1,7 @@
 import type { GuessRow } from "@/store/store";
 import { NUMBER_OF_GUESSES } from "@/store/store";
+import { Button, HStack, Text } from "@chakra-ui/react";
+import { BsTwitter } from "react-icons/bs";
 
 const ICON_MAP = {
   0: "⬛",
@@ -15,14 +17,19 @@ const TweetMessage = ({ guesses }: { guesses: GuessRow[] }) => {
   `);
 
   return (
-    <a
-      className="p-2 bg-red-200 rounded mt-4 hover:bg-red-400"
+    <Button
+      as="a"
       href={`https://twitter.com/intent/tweet?text=${tweetMessage}`}
-      rel="noreferrer"
       target="_blank"
+      size="lg"
+      colorScheme="white"
+      variant="outline"
     >
-      Tweet
-    </a>
+      <HStack gap="1">
+        <BsTwitter color="#00acee" />
+        <Text>Share</Text>
+      </HStack>
+    </Button>
   );
 };
 export default TweetMessage;

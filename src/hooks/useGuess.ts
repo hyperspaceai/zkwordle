@@ -3,18 +3,22 @@ import { useEffect, useState } from "react";
 import type { GameState, GuessRow } from "@/store/store";
 import { useGameStore } from "@/store/store";
 import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
+import { useToast } from '@chakra-ui/react'
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
 
-export const useGuess = (): [
-  string,
-  React.Dispatch<React.SetStateAction<string>>,
-  (letter: string) => void,
-  boolean,
-  boolean,
-  boolean,
-] => {
+interface GuessHook {
+  guess: string;
+  setGuess: React.Dispatch<React.SetStateAction<string>>;
+  addGuessLetter: (letter: string) => void;
+  showInvalidGuess: boolean;
+  checkingGuess: boolean;
+  canType: boolean;
+
+}
+
+export const useGuess = (): GuessHook => {
   const [guess, setGuess] = useState("");
 
   const [showInvalidGuess, setInvalidGuess] = useState(false);
@@ -25,6 +29,8 @@ export const useGuess = (): [
   const prevGuess = usePrevious(guess);
 
   const { validateGuesses } = useWorker();
+
+  const toast = useToast()
 
   const handleValidateGuesses = async (
     gameState: GameState["gameState"],
@@ -58,6 +64,14 @@ export const useGuess = (): [
     let id: NodeJS.Timeout;
     if (showInvalidGuess) {
       id = setTimeout(() => setInvalidGuess(false), 1500);
+      toast({
+          title: 'Invalid word!',
+          position: 'top-right',
+          status: 'error',
+          duration: 1500,
+          isClosable: true,
+          
+        })
     }
 
     return () => clearTimeout(id);
@@ -131,5 +145,5 @@ export const useGuess = (): [
     };
   });
 
-  return [guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType];
+  return { guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType}
 };
