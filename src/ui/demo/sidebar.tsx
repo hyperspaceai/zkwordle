@@ -1,4 +1,5 @@
 import { Link, Text } from "@chakra-ui/react";
+
 import { Sidebar } from "@/ui/sidebar";
 
 const LEARN_MORE_URL = "https://hyperspace.foundation/";

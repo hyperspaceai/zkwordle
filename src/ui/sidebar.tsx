@@ -32,7 +32,7 @@ const SidebarContainer = chakra("nav", {
     borderRightWidth: 1,
     borderRightColor: "gray.700",
     display: "flex",
-    experimental_spaceY: 4,
+    gap: 4,
     flexDir: "column",
     maxW: "300px",
     minW: "300px",
