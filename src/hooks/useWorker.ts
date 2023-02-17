@@ -9,6 +9,11 @@ export interface ValidateGuessResponse {
   execution_time: bigint;
 }
 
+export interface VerifyProofResponse {
+  time_taken: bigint;
+  result: boolean;
+}
+
 const useWorker = () => {
   const workerRef = useRef<Worker>();
 
@@ -39,11 +44,11 @@ const useWorker = () => {
         action: "verify",
         args: [proof],
       });
-      return new Promise((resolve) => {
+      return new Promise<VerifyProofResponse>((resolve) => {
         workerRef.current?.addEventListener("message", (e) => {
           const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
           if (operation === "result" && action === "verify") {
-            resolve(result);
+            resolve(result as VerifyProofResponse);
           }
         });
       });

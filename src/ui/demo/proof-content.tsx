@@ -1,8 +1,16 @@
-import useWorker from "@/hooks/useWorker";
-import { Box, BoxProps, Button, Flex } from "@chakra-ui/react";
-import { Proof } from "@prisma/client";
+import type { BoxProps } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
+import type { Proof } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import useWorker from "@/hooks/useWorker";
+
+interface VerifyProof {
+  result: boolean;
+  time_taken?: number;
+  error?: string;
+}
 
 const ProofContent = (props: BoxProps) => {
   const router = useRouter();
@@ -11,7 +19,7 @@ const ProofContent = (props: BoxProps) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [proof, setProof] = useState<Proof>();
-  const [isValidProof, setIsValidProof] = useState<boolean | undefined>();
+  const [validProof, setValidProof] = useState<VerifyProof | undefined>();
 
   const getProofById = async () => {
     const response = await fetch(`/api/proof/${id}`, {
@@ -22,20 +30,20 @@ const ProofContent = (props: BoxProps) => {
     if (data) {
       setProof(data);
     } else {
-      setIsValidProof(false);
+      setValidProof({ result: false, error: "Id not found" });
     }
   };
 
   const handleVerify = async () => {
     if (!worker || !proof) return;
-    setIsValidProof(undefined);
+    setValidProof(undefined);
 
     const stateProof = { bytes: Buffer.from(proof.bytes), inputs: Buffer.from(proof.input) };
     const valid = await verifyProof(stateProof);
-    if (typeof valid === "boolean") {
-      setIsValidProof(valid);
+    if (typeof valid?.result === "boolean") {
+      setValidProof({ result: valid.result, time_taken: Number(valid.time_taken) });
     } else {
-      setIsValidProof(false);
+      setValidProof({ result: false, error: "Proof not found" });
     }
   };
 
@@ -47,33 +55,36 @@ const ProofContent = (props: BoxProps) => {
       setIsLoading(false);
     }
   }, [id]);
+
+  if (isLoading) return null;
+
   return (
-    <>
-      <Flex
-        _before={{
-          bgColor: "gray.900",
-          content: '""',
-          inset: 0,
-          opacity: 0.9,
-          pos: "absolute",
-          rounded: "inherit",
-          zIndex: -1,
-        }}
-        borderColor="gray.700"
-        borderWidth={1}
-        flexDir="column"
-        pos="relative"
-        rounded="xl"
-        {...props}
-      >
-        <Flex direction="column" mx="auto" alignItems="center" justifyContent="center" h="full">
-          {isValidProof !== undefined && <Box>{isValidProof ? "valid" : "invalid"}</Box>}
-          <Button p="4" borderRadius="md" bg="green.500" onClick={() => handleVerify()} type="button">
-            {isValidProof === undefined ? "Verify Proof" : "Verify Again"}
-          </Button>
-        </Flex>
+    <Flex
+      _before={{
+        bgColor: "gray.900",
+        content: '""',
+        inset: 0,
+        opacity: 0.9,
+        pos: "absolute",
+        rounded: "inherit",
+        zIndex: -1,
+      }}
+      borderColor="gray.700"
+      borderWidth={1}
+      flexDir="column"
+      pos="relative"
+      rounded="xl"
+      {...props}
+    >
+      <Flex alignItems="center" direction="column" h="full" justifyContent="center" mx="auto">
+        {validProof?.error && <Box>{validProof.error}</Box>}
+        {validProof && !validProof.error && <Box>{validProof.result ? "valid" : "invalid"}</Box>}
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+        <Button bg="green.500" borderRadius="md" onClick={() => handleVerify()} p="4" type="button">
+          {validProof === undefined ? "Verify Proof" : "Verify Again"}
+        </Button>
       </Flex>
-    </>
+    </Flex>
   );
 };
 export default ProofContent;
