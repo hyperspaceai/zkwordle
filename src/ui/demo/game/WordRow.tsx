@@ -24,17 +24,14 @@ const WordRow = ({
 
   return (
     <HStack gap="4">
-      {/* {letters.map((char, index) => (
-        <CharacterTile key={char + String(index)} index={index} state={result[index]} value={char} />
-      ))} */}
       {letters.map((char, index) => {
         if (char !== "") {
           return (
             <CharacterTile
               key={char + String(index)}
               checkingGuess={checkingGuess}
-              index={index}
               currentIndex={lettersProp.length - 1}
+              index={index}
               state={result[index]}
               value={char}
             />

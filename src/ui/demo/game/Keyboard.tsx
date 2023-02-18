@@ -1,10 +1,10 @@
+import { Button, HStack, Icon, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { AiOutlineEnter } from "react-icons/ai";
+
 import { useGameStore } from "@/store/store";
 import { keypadLayout } from "@/utils/keyboardLayout";
 import { LetterState } from "@/utils/word";
-import { Button, HStack, Icon, VStack } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-
-import { AiOutlineEnter } from "react-icons/ai";
 
 const Keyboard = ({ onClick }: { onClick: (letter: string) => void }) => {
   const keyboardLetterState = useGameStore((s) => s.keyboardLetterState);
@@ -16,10 +16,10 @@ const Keyboard = ({ onClick }: { onClick: (letter: string) => void }) => {
     <VStack spacing={1}>
       {keypadLayout.map((keyboardRow, rowIndex) => {
         return (
-          <HStack key={rowIndex} spacing={1}>
+          <HStack key={String(rowIndex) + (keyboardRow[rowIndex]?.key || "")} spacing={1}>
             {keyboardRow.map((letter) => {
               const letterState = keyboardLetterState[letter.key];
-              return <KeypadKey key={letter.key} letter={letter} letterState={letterState} handleClick={handleClick} />;
+              return <KeypadKey key={letter.key} handleClick={handleClick} letter={letter} letterState={letterState} />;
             })}
           </HStack>
         );
@@ -29,7 +29,7 @@ const Keyboard = ({ onClick }: { onClick: (letter: string) => void }) => {
 };
 
 const backspace = (
-  <Icon h="6" w="6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <Icon fill="none" h="6" stroke="currentColor" viewBox="0 0 24 24" w="6" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z"
       strokeLinecap="round"
@@ -68,7 +68,7 @@ const KeypadKey = ({ letter, handleClick, letterState }: KeypadKeyProps) => {
   });
 
   return (
-    <Button backgroundColor={keypadKeyColor} key={letter.key} onClick={() => handleClick(letter.key)} type="button">
+    <Button key={letter.key} backgroundColor={keypadKeyColor} onClick={() => handleClick(letter.key)} type="button">
       {letter.key === "Enter" ? <AiOutlineEnter /> : letter.key === "Backspace" ? backspace : letter.key.toUpperCase()}
     </Button>
   );
