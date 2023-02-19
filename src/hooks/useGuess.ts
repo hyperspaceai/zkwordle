@@ -48,8 +48,7 @@ export const useGuess = (): GuessHook => {
 
     const { proof, result, proving_time, execution_time } = data;
 
-    updateProofState(proof, result, Number(proving_time), Number(execution_time));
-    await addValidProofToDB({
+    const newProof = await addValidProofToDB({
       gameId,
       answer,
       gameState,
@@ -59,6 +58,8 @@ export const useGuess = (): GuessHook => {
       bytes: proof.bytes,
       input: proof.inputs,
     });
+
+    updateProofState(newProof.id, proof, result, Number(proving_time), Number(execution_time));
   };
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { GameState } from "@/store/store";
+import { Proof } from "@prisma/client";
 import wordBank from "./word-bank.json";
 
 export const LETTER_LENGTH = 5;
@@ -84,5 +85,5 @@ export const addValidProofToDB = async ({
       "Content-Type": "application/json",
     },
   });
-  return res;
+  return res.json() as Promise<Proof>;
 };

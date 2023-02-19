@@ -48,7 +48,7 @@ const ProofContent = (props: BoxProps) => {
   };
 
   useEffect(() => {
-    if (id && worker) {
+    if (id) {
       getProofById().catch((err) => {
         console.log(err);
       });
