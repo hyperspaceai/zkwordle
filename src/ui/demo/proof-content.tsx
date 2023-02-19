@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import useWorker from "@/hooks/useWorker";
+import NavBar from "./game/Navbar";
 
 interface VerifyProof {
   result: boolean;
@@ -76,6 +77,7 @@ const ProofContent = (props: BoxProps) => {
       rounded="xl"
       {...props}
     >
+      <NavBar />
       <Flex alignItems="center" direction="column" h="full" justifyContent="center" mx="auto">
         {validProof?.error && <Box>{validProof.error}</Box>}
         {validProof && !validProof.error && <Box>{validProof.result ? "valid" : "invalid"}</Box>}
