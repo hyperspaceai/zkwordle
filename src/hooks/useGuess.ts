@@ -1,13 +1,13 @@
 import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
+import useStatsStore from "@/store/stats";
 import type { GameState, GuessRow } from "@/store/store";
 import { useGameStore } from "@/store/store";
 import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
-import useStatsStore from "@/store/stats";
 
 interface GuessHook {
   guess: string;
