@@ -1,8 +1,7 @@
 import { Button, HStack, Text } from "@chakra-ui/react";
 import { BsTwitter } from "react-icons/bs";
 
-import type { GuessRow } from "@/store/store";
-import { NUMBER_OF_GUESSES } from "@/store/store";
+import { NUMBER_OF_GUESSES, useGameStore } from "@/store/store";
 
 const ICON_MAP = {
   0: "⬛",
@@ -10,11 +9,19 @@ const ICON_MAP = {
   2: "🟩",
 };
 
-const TweetMessage = ({ guesses, isGameOver }: { guesses: GuessRow[]; isGameOver: boolean }) => {
-  const results = guesses.map((row) => row.result.map((result) => ICON_MAP[result]).join(""));
-  const tweetMessage = encodeURI(`@HyperspaceOrg wordle 001 ${results.length}/${NUMBER_OF_GUESSES}\n\n${results.join(
-    "\n",
-  )}\n\nPROOF
+const TweetMessage = () => {
+  const { gameState, rows, gameId, validGuess } = useGameStore((s) => ({
+    gameId: s.gameId,
+    gameState: s.gameState,
+    rows: s.rows,
+    validGuess: s.validGuess,
+  }));
+  const isGameOver = gameState !== "playing";
+  const results = rows.map((row) => row.result.map((result) => ICON_MAP[result]).join(""));
+  const URL = process.env.NEXT_PUBLIC_BASE_URL;
+  const tweetMessage = encodeURI(`@HyperspaceOrg zkWordle ${String(gameId).padStart(4, "0")} ${
+    results.length
+  }/${NUMBER_OF_GUESSES}\n\n${results.join("\n")}\n\nVerify the proof of execution\n${URL}/proof/${validGuess?.id}
   `);
 
   if (!isGameOver) {

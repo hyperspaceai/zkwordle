@@ -33,9 +33,8 @@ const GameModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const btnRef = useRef<HTMLButtonElement>(null);
-  const { gameState, rows } = useGameStore((s) => ({
+  const { gameState } = useGameStore((s) => ({
     gameState: s.gameState,
-    rows: s.rows,
   }));
   const isGameOver = gameState !== "playing";
 
@@ -76,7 +75,7 @@ const GameModal = () => {
                 <CountdownWrapper />
                 <Divider h="50" orientation="vertical" />
                 <Flex justify="flex-end" w="50%">
-                  <TweetMessage guesses={rows} isGameOver={isGameOver} />
+                  <TweetMessage />
                 </Flex>
               </Flex>
             </Flex>
