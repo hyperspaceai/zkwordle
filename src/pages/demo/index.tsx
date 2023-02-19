@@ -1,4 +1,5 @@
 import { Box, Flex, HStack } from "@chakra-ui/react";
+import Link from "next/link";
 
 import { BrandLogo } from "@/ui/brand/logo";
 import { MainContent } from "@/ui/demo/main-content";
@@ -9,10 +10,12 @@ const WordlePage = () => {
   return (
     <Layout gap={4} p={8}>
       <Flex justify="space-between">
-        <HStack justify="center">
-          <BrandLogo boxSize={8} color="brand.primary" />
-          <Box fontWeight="bold">ZK-WASM Wordle</Box>
-        </HStack>
+        <Link href="/">
+          <HStack justify="center">
+            <BrandLogo boxSize={8} color="brand.primary" />
+            <Box fontWeight="bold">ZK-WASM Wordle</Box>
+          </HStack>
+        </Link>
         <ModeButton alignSelf="end" />
       </Flex>
       <MainContent flexGrow={1} />
