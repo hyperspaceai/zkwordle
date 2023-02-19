@@ -71,9 +71,9 @@ const Board = () => {
         {rows.map(({ word, result }, index) => (
           <WordRow
             key={word + String(index)}
+            checkingGuess={checkingGuess}
             className={showInvalidGuess && index === currentRow ? "animate-bounce" : ""}
             currentRow={index === currentRow}
-            checkingGuess={checkingGuess}
             letters={word}
             result={result}
           />
@@ -81,7 +81,7 @@ const Board = () => {
       </VStack>
       <Keyboard
         onClick={(letter) => {
-          if (canType) {
+          if (canType && state.gameState === "playing") {
             addGuessLetter(letter);
           }
         }}

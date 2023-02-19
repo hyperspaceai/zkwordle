@@ -24,8 +24,11 @@ export const useGuess = (): GuessHook => {
   const [showInvalidGuess, setInvalidGuess] = useState(false);
   const [checkingGuess, setCheckingGuess] = useState(false);
   const [canType, setCanType] = useState(true);
-  const addGuess = useGameStore((s) => s.addGuess);
-  const updateProofState = useGameStore((s) => s.validateProof);
+  const { addGuess, updateProofState, gameState } = useGameStore((s) => ({
+    addGuess: s.addGuess,
+    updateProofState: s.validateProof,
+    gameState: s.gameState,
+  }));
   const prevGuess = usePrevious(guess);
   const { updateStats } = useStatsStore((s) => ({ updateStats: s.updateStats }));
 
@@ -34,12 +37,12 @@ export const useGuess = (): GuessHook => {
   const toast = useToast();
 
   const handleValidateGuesses = async (
-    gameState: GameState["gameState"],
+    currentGameState: GameState["gameState"],
     gameId: number,
     answer: string,
     rows: GuessRow[],
   ) => {
-    if (gameState === "playing") return;
+    if (currentGameState === "playing") return;
     const words = rows.map((r) => r.word);
     const results = rows.map((r) => r.result);
 
@@ -51,7 +54,7 @@ export const useGuess = (): GuessHook => {
     const newProof = await addValidProofToDB({
       gameId,
       answer,
-      gameState,
+      gameState: currentGameState,
       guesses: words,
       provingTime: Number(proving_time),
       executionTime: Number(execution_time),
@@ -97,6 +100,7 @@ export const useGuess = (): GuessHook => {
       if (isValidWord(prevGuess)) {
         const currentState = addGuess(prevGuess);
         if (currentState.gameState !== "playing") {
+          setCanType(false);
           updateStats(currentState.gameState === "won");
           handleValidateGuesses(
             currentState.gameState,
@@ -135,6 +139,7 @@ export const useGuess = (): GuessHook => {
   };
 
   const onKeyDown = (e: KeyboardEvent) => {
+    if (gameState !== "playing") return;
     const letter = e.key;
     addGuessLetter(letter);
   };
