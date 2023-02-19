@@ -9,7 +9,7 @@ import HowToPlay from "./HowToPlay";
 const NavBar = () => {
   const router = useRouter();
   return (
-    <Flex alignItems="center" h="6vh" justifyContent="space-between" px={6} pt={4}>
+    <Flex alignItems="center" h="6vh" justifyContent="space-between" pt={4} px={6}>
       <HStack>
         <Button
           as="a"
