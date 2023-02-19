@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 const seed = async () => {
   try {
-    const words = generateWords(30);
+    const words = generateWords(1825);
     await prisma.word.createMany({ data: words });
 
     await prisma.$disconnect();
