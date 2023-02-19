@@ -69,6 +69,7 @@ const KeypadKey = ({ letter, handleClick, letterState }: KeypadKeyProps) => {
 
   return (
     <Button key={letter.key} backgroundColor={keypadKeyColor} onClick={() => handleClick(letter.key)} type="button">
+      {/* eslint-disable-next-line no-nested-ternary */}
       {letter.key === "Enter" ? <AiOutlineEnter /> : letter.key === "Backspace" ? backspace : letter.key.toUpperCase()}
     </Button>
   );

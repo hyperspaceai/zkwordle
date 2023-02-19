@@ -1,22 +1,23 @@
-import { useEffect, useRef } from "react";
 import {
   Button,
+  Divider,
+  HStack,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   useDisclosure,
   VStack,
-  Text,
-  HStack,
-  Divider,
 } from "@chakra-ui/react";
+import { useEffect, useRef } from "react";
 import { FaLightbulb } from "react-icons/fa";
-import CharacterTile from "./CharacterTile";
+
 import { LetterState } from "@/utils/word";
+
+import CharacterTile from "./CharacterTile";
 
 const HowToPlay = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,18 +26,18 @@ const HowToPlay = () => {
   useEffect(() => {
     const notFirstVisit = JSON.parse(localStorage.getItem("notFirstVisit") || "null");
     localStorage.setItem("notFirstVisit", JSON.stringify(true));
-    if (!notFirstVisit) btnRef?.current?.click();
+    if (!notFirstVisit) btnRef.current?.click();
   }, []);
 
   return (
     <>
-      <Button ref={btnRef} onClick={onOpen} size={["xs", "sm", "md"]} variant="ghost" color={"#FAF089"}>
+      <Button color="#FAF089" onClick={onOpen} ref={btnRef} size={["xs", "sm", "md"]} variant="ghost">
         <FaLightbulb />
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered motionPreset="slideInBottom" size={["sm", "md", "lg"]}>
+      <Modal isCentered isOpen={isOpen} motionPreset="slideInBottom" onClose={onClose} size={["sm", "md", "lg"]}>
         <ModalOverlay />
-        <ModalContent alignItems={"center"} textAlign="center">
+        <ModalContent alignItems="center" textAlign="center">
           <ModalHeader>How To Play</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -50,31 +51,31 @@ const HowToPlay = () => {
               <Divider />
               <Text fontSize="sm">Examples</Text>
               <HStack>
-                <CharacterTile value="H" state={LetterState.Match} index={0} />
-                <CharacterTile value="E" state={undefined} index={1} />
-                <CharacterTile value="L" state={undefined} index={2} />
-                <CharacterTile value="L" state={undefined} index={3} />
-                <CharacterTile value="O" state={undefined} index={4} />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={0} state={LetterState.Match} value="H" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={1} state={undefined} value="E" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={2} state={undefined} value="L" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={3} state={undefined} value="L" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={4} state={undefined} value="O" />
               </HStack>
               <Text fontSize="sm">
                 The letter <b>H</b> is in the Wordle and in the correct spot.
               </Text>
               <HStack>
-                <CharacterTile value="H" state={undefined} index={0} />
-                <CharacterTile value="Y" state={undefined} index={1} />
-                <CharacterTile value="P" state={undefined} index={2} />
-                <CharacterTile value="E" state={undefined} index={3} />
-                <CharacterTile value="R" state={LetterState.Present} index={4} />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={0} state={undefined} value="H" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={1} state={undefined} value="Y" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={2} state={undefined} value="P" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={3} state={undefined} value="E" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={4} state={LetterState.Present} value="R" />
               </HStack>
               <Text fontSize="sm">
                 The letter <b>R</b> is in the Wordle but in the wrong spot.
               </Text>
               <HStack>
-                <CharacterTile value="S" state={undefined} index={0} />
-                <CharacterTile value="P" state={LetterState.Miss} index={1} />
-                <CharacterTile value="A" state={undefined} index={2} />
-                <CharacterTile value="C" state={undefined} index={3} />
-                <CharacterTile value="E" state={undefined} index={4} />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={0} state={undefined} value="S" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={1} state={LetterState.Miss} value="P" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={2} state={undefined} value="A" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={3} state={undefined} value="C" />
+                <CharacterTile checkingGuess={false} currentIndex={7} index={4} state={undefined} value="E" />
               </HStack>
               <Text fontSize="sm">
                 The letter <b>P</b> is not in the Wordle.

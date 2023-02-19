@@ -5,9 +5,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Analytics } from "@vercel/analytics/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { MetaTags } from "@/ui/meta-tags";
-import { theme } from "@/styles/theme";
 
+import { theme } from "@/styles/theme";
+import { MetaTags } from "@/ui/meta-tags";
 
 export { reportWebVitals } from "next-axiom";
 

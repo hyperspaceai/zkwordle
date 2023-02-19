@@ -4,6 +4,4 @@ const HomePage = () => {
   return <WordlePage />;
 };
 
-
-
 export default HomePage;

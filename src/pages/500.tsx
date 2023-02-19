@@ -1,6 +1,7 @@
 import { Heading, Link, Stack, Text } from "@chakra-ui/react";
-import { useSeo } from "@/hooks/use-seo";
 import NextLink from "next/link";
+
+import { useSeo } from "@/hooks/use-seo";
 
 const InternalServerErrorPage = () => {
   const { Seo, title } = useSeo({

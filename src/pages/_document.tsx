@@ -1,6 +1,7 @@
 import { FaviconTags } from "__generated__/favicon-tags";
 import { ColorModeScript } from "@chakra-ui/react";
 import { Head, Html, Main, NextScript } from "next/document";
+
 import { config } from "@/styles/config";
 
 const Document = () => {
