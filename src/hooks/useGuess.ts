@@ -1,9 +1,9 @@
+import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 import type { GameState, GuessRow } from "@/store/store";
 import { useGameStore } from "@/store/store";
 import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
-import { useToast } from '@chakra-ui/react'
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
@@ -15,7 +15,6 @@ interface GuessHook {
   showInvalidGuess: boolean;
   checkingGuess: boolean;
   canType: boolean;
-
 }
 
 export const useGuess = (): GuessHook => {
@@ -30,7 +29,7 @@ export const useGuess = (): GuessHook => {
 
   const { validateGuesses } = useWorker();
 
-  const toast = useToast()
+  const toast = useToast();
 
   const handleValidateGuesses = async (
     gameState: GameState["gameState"],
@@ -65,13 +64,12 @@ export const useGuess = (): GuessHook => {
     if (showInvalidGuess) {
       id = setTimeout(() => setInvalidGuess(false), 1500);
       toast({
-          title: 'Invalid word!',
-          position: 'top-right',
-          status: 'error',
-          duration: 1500,
-          isClosable: true,
-          
-        })
+        title: "Invalid word!",
+        position: "top-right",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
+      });
     }
 
     return () => clearTimeout(id);
@@ -145,5 +143,5 @@ export const useGuess = (): GuessHook => {
     };
   });
 
-  return { guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType}
+  return { guess, setGuess, addGuessLetter, showInvalidGuess, checkingGuess, canType };
 };

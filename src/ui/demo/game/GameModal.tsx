@@ -41,7 +41,11 @@ const GameModal = () => {
   // Open the modal after render
   useEffect(() => {
     if (isGameOver) {
-      onOpen();
+      const openModal = setTimeout(() => {
+        onOpen();
+      }, 1500);
+
+      return () => clearTimeout(openModal);
     }
   }, [isGameOver, onOpen]);
   return (
