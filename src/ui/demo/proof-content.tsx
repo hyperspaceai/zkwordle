@@ -1,10 +1,14 @@
 import type { BoxProps } from "@chakra-ui/react";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import type { Proof } from "@prisma/client";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { RxCross1 } from "react-icons/rx";
 
 import useWorker from "@/hooks/useWorker";
+
+import { BrandLogo } from "../brand/logo";
 import NavBar from "./game/Navbar";
 
 interface VerifyProof {
@@ -78,15 +82,106 @@ const ProofContent = (props: BoxProps) => {
       {...props}
     >
       <NavBar />
-      <Flex alignItems="center" direction="column" h="full" justifyContent="center" mx="auto">
-        {validProof?.error && <Box>{validProof.error}</Box>}
-        {validProof && !validProof.error && <Box>{validProof.result ? "valid" : "invalid"}</Box>}
-        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-        <Button bg="green.500" borderRadius="md" onClick={() => handleVerify()} p="4" type="button">
-          {validProof === undefined ? "Verify Proof" : "Verify Again"}
-        </Button>
+      <Flex alignItems="center" direction="column" h="full" justifyContent="center" mx="auto" w="full">
+        <Flex direction="column" p="12" w="container.sm">
+          {validProof?.error && <Error />}
+          {!validProof?.error && (
+            <>
+              <ValidProofDetails isValid={validProof?.result} timeTaken={validProof?.time_taken} />
+              <Button
+                _active={{ transform: "scale(0.98)" }}
+                _hover={{ bgColor: "gray.900" }}
+                bgColor="black"
+                border="1px"
+                borderColor="brand.primary"
+                fontSize="2xl"
+                leftIcon={<BrandLogo boxSize={8} color="brand.primary" />}
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={() => handleVerify()}
+                p="12"
+                padding="8"
+                textColor="gray.300"
+                variant="solid"
+              >
+                {validProof === undefined ? "Verify Proof" : "Re-Verify Proof"}
+              </Button>
+            </>
+          )}
+        </Flex>
       </Flex>
     </Flex>
   );
 };
 export default ProofContent;
+
+const ValidProofDetails = ({ isValid, timeTaken }: { isValid?: boolean; timeTaken?: number }) => {
+  return (
+    <Flex alignItems="center" gap="4" justify="space-between" mb="8">
+      <Flex justify="center" w="50%">
+        <Box alignItems="center" textAlign="center" w="full">
+          <Heading as="h5" size="xl" textColor={`${isValid === undefined ? "gray.500" : "#fff"}`}>
+            {isValid === undefined && "Pending"}
+            {isValid !== undefined && isValid && "Valid Proof"}
+            {isValid !== undefined && !isValid && "Invalid Proof"}
+          </Heading>
+        </Box>
+      </Flex>
+      <Divider h="50" orientation="vertical" />
+      <Flex alignItems="center" justify="center" w="50%">
+        <Box alignItems="center" textAlign="center" w="full">
+          <Heading as="h5" size="md" whiteSpace="nowrap">
+            Execution Time
+          </Heading>
+          <Box as="span" color="gray.100">
+            <Box as="span" color="gray.100" fontSize="4xl" fontWeight="bold">
+              {timeTaken ? timeTaken : "--"}
+            </Box>
+            <Box as="span" color="gray.300" fontSize="md" ml="1">
+              ms
+            </Box>
+          </Box>
+        </Box>
+      </Flex>
+    </Flex>
+  );
+};
+
+export const Error = () => (
+  <Box px={6} py={10} textAlign="center">
+    <Box display="inline-block">
+      <Flex
+        alignItems="center"
+        bg="red.500"
+        flexDirection="column"
+        h="55px"
+        justifyContent="center"
+        rounded="50px"
+        textAlign="center"
+        w="55px"
+      >
+        <Icon as={RxCross1} boxSize={6} />
+      </Flex>
+    </Box>
+    <Heading as="h2" mb={2} mt={6} size="xl">
+      Proof not found
+    </Heading>
+    <Text color="gray.500">Please check the proof ID and try again.</Text>
+    <Button
+      _active={{ transform: "scale(0.98)" }}
+      _hover={{ bgColor: "gray.900" }}
+      as={Link}
+      bgColor="black"
+      border="1px"
+      borderColor="brand.primary"
+      fontSize="xl"
+      href="/"
+      leftIcon={<BrandLogo boxSize={8} color="brand.primary" />}
+      mt="8"
+      p="8"
+      textColor="gray.300"
+      variant="solid"
+    >
+      Play!
+    </Button>
+  </Box>
+);
