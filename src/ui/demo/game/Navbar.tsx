@@ -1,4 +1,4 @@
-import { Button, Flex, HStack } from "@chakra-ui/react";
+import { Button, Flex, HStack, Icon } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { BsGlobe } from "react-icons/bs";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
@@ -19,7 +19,7 @@ const NavBar = () => {
           target="_blank"
           variant="ghost"
         >
-          <FaDiscord />
+          <Icon as={FaDiscord} boxSize={{ base: "6", md: "8" }} />
         </Button>
         <Button
           as="a"
@@ -29,7 +29,7 @@ const NavBar = () => {
           target="_blank"
           variant="ghost"
         >
-          <FaTwitter />
+          <Icon as={FaTwitter} boxSize={{ base: "6", md: "8" }} />
         </Button>
         <Button
           as="a"
@@ -39,7 +39,7 @@ const NavBar = () => {
           target="_blank"
           variant="ghost"
         >
-          <BsGlobe />
+          <Icon as={BsGlobe} boxSize={{ base: "6", md: "8" }} />
         </Button>
       </HStack>
       {router.pathname === "/" && (

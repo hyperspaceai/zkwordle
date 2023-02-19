@@ -2,6 +2,7 @@ import {
   Button,
   Divider,
   Flex,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -51,7 +52,7 @@ const GameModal = () => {
   return (
     <>
       <Button color="#fff" onClick={onOpen} ref={btnRef} size={["xs", "sm", "md"]} variant="ghost">
-        <BsFillBarChartFill />
+        <Icon as={BsFillBarChartFill} boxSize={{ base: "6", md: "8" }} />
       </Button>
 
       <Modal isCentered isOpen={isOpen} motionPreset="slideInBottom" onClose={onClose}>

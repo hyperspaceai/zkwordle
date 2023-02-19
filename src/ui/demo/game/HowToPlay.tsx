@@ -2,6 +2,7 @@ import {
   Button,
   Divider,
   HStack,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -32,7 +33,7 @@ const HowToPlay = () => {
   return (
     <>
       <Button color="#FAF089" onClick={onOpen} ref={btnRef} size={["xs", "sm", "md"]} variant="ghost">
-        <FaLightbulb />
+        <Icon as={FaLightbulb} boxSize={{ base: "6", md: "8" }} />
       </Button>
 
       <Modal isCentered isOpen={isOpen} motionPreset="slideInBottom" onClose={onClose} size={["sm", "md", "lg"]}>
