@@ -7,6 +7,7 @@ import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
+import useStatsStore from "@/store/stats";
 
 interface GuessHook {
   guess: string;
@@ -26,6 +27,7 @@ export const useGuess = (): GuessHook => {
   const addGuess = useGameStore((s) => s.addGuess);
   const updateProofState = useGameStore((s) => s.validateProof);
   const prevGuess = usePrevious(guess);
+  const { updateStats } = useStatsStore((s) => ({ updateStats: s.updateStats }));
 
   const { validateGuesses } = useWorker();
 
@@ -94,6 +96,7 @@ export const useGuess = (): GuessHook => {
       if (isValidWord(prevGuess)) {
         const currentState = addGuess(prevGuess);
         if (currentState.gameState !== "playing") {
+          updateStats(currentState.gameState === "won");
           handleValidateGuesses(
             currentState.gameState,
             currentState.gameId,

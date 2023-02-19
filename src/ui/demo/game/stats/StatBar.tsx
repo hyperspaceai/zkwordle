@@ -1,15 +1,15 @@
 import { Box, Stack } from "@chakra-ui/react";
 
-import type { GameStats } from "./Stats";
+import type { StatsState } from "@/store/stats";
 
 interface StatBarProps {
-  gameStats: GameStats;
+  gameStats: StatsState;
 }
 export const StatBar = ({ gameStats }: StatBarProps) => {
   return (
     <Stack direction="row" justify="center" my={2} spacing={4}>
       <StatItem label="Total tries" value={gameStats.totalGames} />
-      <StatItem label="Success rate" value={`${gameStats.successRate}%`} />
+      <StatItem label="Success rate" value={`${Math.round(gameStats.successRate * 100)}%`} />
       <StatItem label="Current streak" value={gameStats.currentStreak} />
       <StatItem label="Best streak" value={gameStats.bestStreak} />
     </Stack>
