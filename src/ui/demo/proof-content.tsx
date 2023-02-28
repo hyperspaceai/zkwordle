@@ -91,7 +91,18 @@ const ProofContent = (props: BoxProps) => {
       {...props}
     >
       <NavBar />
-      <Flex alignItems="center" direction="column" gap="8" h="full" justifyContent="center" mx="auto" w="full">
+      <Flex alignItems="center" direction="column" gap="8" h="full" justifyContent="center" mx="auto">
+        <Text
+          fontSize="2xl"
+          p="12"
+          padding="8"
+          sx={{ "& span": { color: "pink.400" } }}
+          textAlign="left"
+          w="container.sm"
+        >
+          When you verify a proof, the proof associated with the ID: <span>{proof?.id}</span> is fetched and then
+          verified here in your browser showing the validity of the guesses you see below, displayed as colored squares.
+        </Text>
         <VStack>
           {rows.map(({ word, result }, index) => (
             <WordRow
