@@ -42,7 +42,7 @@ const HowToPlay = () => {
           <ModalHeader>How To Play</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack alignItems="center">
+            <VStack alignItems="center" mb="4">
               <Text fontSize="sm">
                 Guess the word in 6 tries. After each guess, the color of the tiles will change to show how close your
                 guess was to the word.
@@ -50,7 +50,9 @@ const HowToPlay = () => {
 
               <Text fontSize="sm">Type the word with your Keyboard or Keypad, and press ENTER to submit.</Text>
               <Divider />
-              <Text fontSize="sm">Examples</Text>
+              <Text fontSize="md" fontWeight="semibold">
+                Examples
+              </Text>
               <HStack>
                 <CharacterTile checkingGuess={false} currentIndex={7} index={0} state={LetterState.Match} value="H" />
                 <CharacterTile checkingGuess={false} currentIndex={7} index={1} state={undefined} value="E" />
@@ -80,6 +82,15 @@ const HowToPlay = () => {
               </HStack>
               <Text fontSize="sm">
                 The letter <b>P</b> is not in the Wordle.
+              </Text>
+              <Divider pt="2" />
+              <Text fontSize="xl" fontWeight="semibold">
+                Proof Verification
+              </Text>
+              <Text fontSize="sm" sx={{ "& span": { color: "pink.400" } }}>
+                Once you finish guessing the validity of your guesses and the result you got will be packaged in a
+                shareable proof using our ZKWasm runtime which can be verified by anyone in their browser. This let’s
+                other people know in a self-verifiable way whether these guesses were actually the ones used by you.
               </Text>
             </VStack>
           </ModalBody>
