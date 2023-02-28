@@ -121,7 +121,7 @@ const ValidProofDetails = ({ isValid, timeTaken }: { isValid?: boolean; timeTake
         <Box alignItems="center" textAlign="center" w="full">
           <Heading as="h5" size="xl" textColor={`${isValid === undefined ? "gray.500" : "#fff"}`}>
             {isValid === undefined && "Pending"}
-            {isValid !== undefined && isValid && "Valid Proof"}
+            {isValid !== undefined && isValid && "Verified Proof"}
             {isValid !== undefined && !isValid && "Invalid Proof"}
           </Heading>
         </Box>
@@ -130,7 +130,7 @@ const ValidProofDetails = ({ isValid, timeTaken }: { isValid?: boolean; timeTake
       <Flex alignItems="center" justify="center" w="50%">
         <Box alignItems="center" textAlign="center" w="full">
           <Heading as="h5" size="md" whiteSpace="nowrap">
-            Execution Time
+            Verification Time
           </Heading>
           <Box as="span" color="gray.100">
             <Box as="span" color="gray.100" fontSize="4xl" fontWeight="bold">
