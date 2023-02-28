@@ -58,7 +58,7 @@ const GameModal = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalBody mb="4" textAlign="center">
+          <ModalBody textAlign="center">
             <GameComplete isGameOver={isGameOver} />
             <Stats isGameOver={isGameOver} />
           </ModalBody>
