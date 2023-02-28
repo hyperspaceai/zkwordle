@@ -1,5 +1,5 @@
 import type { BoxProps } from "@chakra-ui/react";
-import { Box, Button, Divider, Flex, Heading, Icon, Text } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Heading, Icon, Text, VStack } from "@chakra-ui/react";
 import type { Proof } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,9 +7,13 @@ import { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 
 import useWorker from "@/hooks/useWorker";
+import type { GuessRow } from "@/store/store";
+import { GUESS_LENGTH } from "@/store/store";
+import { computeGuess } from "@/utils/word";
 
 import { BrandLogo } from "../brand/logo";
 import NavBar from "./game/Navbar";
+import WordRow from "./game/WordRow";
 
 interface VerifyProof {
   result: boolean;
@@ -24,6 +28,7 @@ const ProofContent = (props: BoxProps) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [proof, setProof] = useState<Proof>();
+  const [rows, setRows] = useState<GuessRow[]>([]);
   const [validProof, setValidProof] = useState<VerifyProof | undefined>();
 
   const getProofById = async () => {
@@ -34,6 +39,10 @@ const ProofContent = (props: BoxProps) => {
     const data = response.proof;
     if (data) {
       setProof(data);
+
+      const numberOfGuessesRemaining = GUESS_LENGTH - data.guesses.length;
+      const guesses = data.guesses.map((guess) => ({ word: guess, result: computeGuess(guess, data.answer) }));
+      setRows(guesses.concat(Array(numberOfGuessesRemaining).fill("")));
     } else {
       setValidProof({ result: false, error: "Id not found" });
     }
@@ -82,7 +91,20 @@ const ProofContent = (props: BoxProps) => {
       {...props}
     >
       <NavBar />
-      <Flex alignItems="center" direction="column" h="full" justifyContent="center" mx="auto" w="full">
+      <Flex alignItems="center" direction="column" gap="8" h="full" justifyContent="center" mx="auto" w="full">
+        <VStack>
+          {rows.map(({ word, result }, index) => (
+            <WordRow
+              key={word + String(index)}
+              checkingGuess={false}
+              currentRow={false}
+              letters={word}
+              result={result}
+              showChar={false}
+            />
+          ))}
+        </VStack>
+
         <Flex direction="column" p="12" w="container.sm">
           {validProof?.error && <Error />}
           {!validProof?.error && (
@@ -126,7 +148,7 @@ const ValidProofDetails = ({ isValid, timeTaken }: { isValid?: boolean; timeTake
           </Heading>
         </Box>
       </Flex>
-      <Divider h="50" orientation="vertical" />
+      <Divider borderColor="gray.400" borderWidth="2px" h="50" orientation="vertical" />
       <Flex alignItems="center" justify="center" w="50%">
         <Box alignItems="center" textAlign="center" w="full">
           <Heading as="h5" size="md" whiteSpace="nowrap">

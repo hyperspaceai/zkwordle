@@ -11,6 +11,7 @@ interface WordRowProps {
   currentRow: boolean;
   checkingGuess: boolean;
   className?: string;
+  showChar?: boolean;
 }
 const WordRow = ({
   letters: lettersProp = "",
@@ -18,6 +19,7 @@ const WordRow = ({
   checkingGuess,
   currentRow,
   className = "",
+  showChar = true,
 }: WordRowProps) => {
   const lettersRemaining = LETTER_LENGTH - lettersProp.length;
   const letters = lettersProp.split("").concat(Array(lettersRemaining).fill(""));
@@ -33,7 +35,7 @@ const WordRow = ({
               currentIndex={lettersProp.length - 1}
               index={index}
               state={result[index]}
-              value={char}
+              value={showChar ? char : ""}
             />
           );
         }

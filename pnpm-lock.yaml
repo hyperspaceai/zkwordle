@@ -13,6 +13,7 @@ specifiers:
   '@types/react': ^18.0.26
   '@vercel/analytics': ^0.1.6
   '@wry/equality': ^0.5.3
+  claymorphism-css: ^1.0.5
   eslint: ^8.31.0
   eslint-config-next: ^13.1.6
   favicons: ^7.0.2
@@ -43,6 +44,7 @@ dependencies:
   '@prisma/client': 4.10.1_prisma@4.10.1
   '@vercel/analytics': 0.1.10_react@18.2.0
   '@wry/equality': 0.5.3
+  claymorphism-css: 1.0.5
   framer-motion: 8.5.5_biqbaboplfbrettd7655fr4n2y
   iconoir-react: 6.2.1_react@18.2.0
   idb: 7.1.1
@@ -2555,6 +2557,10 @@ packages:
     resolution: {integrity: sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==}
     engines: {node: '>=8'}
     dev: true
+
+  /claymorphism-css/1.0.5:
+    resolution: {integrity: sha512-jbEmVsboW70OHgXRaWLWpVZT22AdrsV8kDWdalxPyqsAx5GJnBFMhHkrMAPof9PqB0sMx/axSXNJshd+OQgT3g==}
+    dev: false
 
   /clean-regexp/1.0.0:
     resolution: {integrity: sha512-GfisEZEJvzKrmGWkvfhgzcz/BllN1USeqD2V6tg14OAOgaCD2Z/PUEuxnAZ/nPvmaHRG7a8y77p1T/IRQ4D1Hw==}
