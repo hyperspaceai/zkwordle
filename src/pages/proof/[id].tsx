@@ -1,3 +1,4 @@
+import { GamesPlayed } from "@/ui/demo/game/GamesPlayed";
 import { Navbar } from "@/ui/demo/game/Navbar";
 import ProofContent from "@/ui/demo/proof-content";
 import { Footer } from "@/ui/footer";
@@ -7,6 +8,7 @@ const ProofPage = () => {
   return (
     <Layout>
       <Navbar />
+      <GamesPlayed />
       <ProofContent />
       <Footer />
     </Layout>
