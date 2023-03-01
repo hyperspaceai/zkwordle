@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Heading, Icon, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Heading, Icon, Text, useToast, VStack } from "@chakra-ui/react";
 import type { Proof } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,6 +29,8 @@ const ProofContent = () => {
   const [rows, setRows] = useState<GuessRow[]>([]);
   const [validProof, setValidProof] = useState<VerifyProof | undefined>();
 
+  const toast = useToast();
+
   const getProofById = async () => {
     setIsLoading(true);
     const response = await fetch(`/api/proof/${id}`, {
@@ -56,8 +58,22 @@ const ProofContent = () => {
     const valid = await verifyProof(stateProof);
     if (typeof valid?.result === "boolean") {
       setValidProof({ result: valid.result, time_taken: Number(valid.time_taken) });
+      toast({
+        title: "Proof verified successfully",
+        position: "top",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
+      });
     } else {
       setValidProof({ result: false, error: "Proof not found" });
+      toast({
+        title: "Proof invalid!",
+        position: "top",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
+      });
     }
   };
 
