@@ -11,6 +11,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { BsFillBarChartFill } from "react-icons/bs";
 
@@ -31,6 +32,7 @@ interface GameModal {
 
 const GameModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
 
   const btnRef = useRef<HTMLButtonElement>(null);
   const { gameState } = useGameStore((s) => ({
@@ -40,7 +42,7 @@ const GameModal = () => {
 
   // Open the modal after render
   useEffect(() => {
-    if (isGameOver) {
+    if (isGameOver && router.pathname === "/") {
       const openModal = setTimeout(() => {
         onOpen();
       }, 1500);

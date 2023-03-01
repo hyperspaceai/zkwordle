@@ -13,6 +13,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { FaLightbulb } from "react-icons/fa";
 
@@ -22,9 +23,11 @@ import CharacterTile from "./CharacterTile";
 
 const HowToPlay = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
   const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (router.pathname !== "/") return;
     const notFirstVisit = JSON.parse(localStorage.getItem("notFirstVisit") || "null");
     localStorage.setItem("notFirstVisit", JSON.stringify(true));
     if (!notFirstVisit) btnRef.current?.click();
