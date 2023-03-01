@@ -87,12 +87,12 @@ const HowToPlay = () => {
               <Text fontSize="xl" fontWeight="semibold">
                 Proof Verification
               </Text>
-              <Text fontSize="sm" sx={{ "& span": { color: "pink.400" } }}>
+              <Text fontSize="sm">
                 In this context, a Zero Knowledge (ZK) proof refers to a proof that demonstrates the occurrence of a
                 specific computation. What&apos;s unique about ZK proofs is that you can verify the proof&apos;s
                 accuracy without having to re-execute the original computation.
               </Text>
-              <Text fontSize="sm" sx={{ "& span": { color: "pink.400" } }}>
+              <Text fontSize="sm">
                 Once you finish guessing the validity of your guesses and the result you got will be packaged in a
                 shareable proof using our ZKWasm runtime which can be verified by anyone in their browser. This let’s
                 other people know in a self-verifiable way whether these guesses were actually the ones used by you.

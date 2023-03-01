@@ -9,6 +9,7 @@ interface CharacterBoxProps {
   checkingGuess: boolean;
   currentIndex: number;
   index: number;
+  proof?: boolean;
 }
 
 // defaultBorderColor = ChakraUI's gray.700
@@ -17,7 +18,7 @@ const defaultBorderColor = "#2D3748";
 // fontColor = ChakraUI's whitealpha.900 and blackalpha.900
 const fontBlack = "RGBA(0, 0, 0, 0.92)";
 
-const CharacterTile = ({ value, state, checkingGuess, index, currentIndex }: CharacterBoxProps) => {
+const CharacterTile = ({ value, state, checkingGuess, index, currentIndex, proof = false }: CharacterBoxProps) => {
   // function mapColor is used to change the default html color for custom hex color
   const mapColor = (letterState: LetterState | undefined) => {
     switch (letterState) {
@@ -91,10 +92,10 @@ const CharacterTile = ({ value, state, checkingGuess, index, currentIndex }: Cha
       animation={animation}
       border="1px"
       borderColor="gray.300"
-      h={["50px", "55px", "60px"]}
+      h={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
       sx={{ animationDelay: delay, animationFillMode: "forwards" }} // backgroundColor come from animationFillMode forwards
       userSelect="none"
-      w={["50px", "55px", "60px"]}
+      w={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
     >
       <Text fontSize="x-large" fontWeight="bold">
         {value?.toUpperCase()}
@@ -117,13 +118,13 @@ const blink = keyframes`
   }
 `;
 
-export const EmptyTile = ({ showCursor }: { showCursor?: boolean }) => (
+export const EmptyTile = ({ showCursor, proof = false }: { showCursor?: boolean; proof?: boolean }) => (
   <Center
     border="1px"
     borderColor="gray.300"
-    h={["50px", "55px", "60px"]}
+    h={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
     userSelect="none"
-    w={["50px", "55px", "60px"]}
+    w={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
   >
     {showCursor && (
       <Text animation={`${blink} 2s infinite ease`} fontSize="x-large">
