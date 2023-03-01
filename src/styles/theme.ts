@@ -43,12 +43,16 @@ export const themeOverrides = (<T extends ThemeOverride>(t: T) => t)({
         fontFamily: "body",
         letterSpacing: "tight",
         lineHeight: "base",
-        minH: "100vh",
+        minH: "100%",
         textRendering: "optimizeLegibility",
         transitionDuration: "normal",
         transitionProperty: "background-color",
         MozOsxFontSmoothing: "grayscale",
         WebkitFontSmoothing: "antialiased",
+        minHeight: "-webkit-fill-available",
+      },
+      html: {
+        height: "-webkit-fill-available",
       },
       "*::placeholder": {
         color: mode("gray.400", "whiteAlpha.400")(props),
