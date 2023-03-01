@@ -13,7 +13,7 @@ const Keyboard = ({ onClick }: { onClick: (letter: string) => void }) => {
   };
 
   return (
-    <VStack spacing={1} w={{ base: "full", md: "container.sm" }} mb={{ base: 2, md: 0 }} px={{ base: 1, md: 0 }}>
+    <VStack mb={{ base: 2, md: 0 }} px={{ base: 1, md: 0 }} spacing={1} w={{ base: "full", md: "container.sm" }}>
       {keypadLayout.map((keyboardRow, rowIndex) => {
         return (
           <HStack
