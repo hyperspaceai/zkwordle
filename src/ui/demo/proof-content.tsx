@@ -30,6 +30,7 @@ const ProofContent = () => {
   const [validProof, setValidProof] = useState<VerifyProof | undefined>();
 
   const getProofById = async () => {
+    setIsLoading(true);
     const response = await fetch(`/api/proof/${id}`, {
       method: "GET",
       headers: { authorization: `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}` },
@@ -44,6 +45,7 @@ const ProofContent = () => {
     } else {
       setValidProof({ result: false, error: "Id not found" });
     }
+    setIsLoading(false);
   };
 
   const handleVerify = async () => {
@@ -64,7 +66,6 @@ const ProofContent = () => {
       getProofById().catch((err) => {
         console.log(err);
       });
-      setIsLoading(false);
     }
   }, [id]);
 
