@@ -8,7 +8,7 @@ const GameTimers = () => {
     validGuess: s.validGuess,
   }));
   return (
-    <Text fontSize="md">
+    <Text fontSize={{ base: "sm", md: "md" }}>
       {/*  eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       Using your guesses, a proof was generated in {validGuess?.proving_time ?? "--"} ms which can be verified via this
       link:{" "}

@@ -27,7 +27,7 @@ const WordRow = ({
   const letters = lettersProp.split("").concat(Array(lettersRemaining).fill(""));
 
   return (
-    <HStack gap="4">
+    <HStack gap="4" justify="center">
       {letters.map((char, index) => {
         if (char !== "") {
           return (

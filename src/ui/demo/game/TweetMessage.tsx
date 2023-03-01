@@ -26,7 +26,13 @@ const TweetMessage = () => {
 
   if (!isGameOver) {
     return (
-      <Button as="button" colorScheme="white" isDisabled={!isGameOver} size="lg" variant="outline">
+      <Button
+        as="button"
+        colorScheme="white"
+        isDisabled={!isGameOver}
+        size={{ base: "md", md: "lg" }}
+        variant="outline"
+      >
         <HStack gap="1">
           <BsTwitter color="#00acee" />
           <Text>Share</Text>
@@ -40,7 +46,7 @@ const TweetMessage = () => {
       as="a"
       colorScheme="white"
       href={`https://twitter.com/intent/tweet?text=${tweetMessage}`}
-      size="lg"
+      size={{ base: "md", md: "lg" }}
       target="_blank"
       variant="outline"
     >

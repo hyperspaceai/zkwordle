@@ -56,7 +56,7 @@ const GameModal = () => {
         <Icon as={BsFillBarChartFill} boxSize={{ base: "6", md: "8" }} />
       </Button>
 
-      <Modal isCentered isOpen={isOpen} motionPreset="slideInBottom" onClose={onClose}>
+      <Modal isCentered isOpen={isOpen} motionPreset="slideInBottom" onClose={onClose} size={["sm", "md", "lg"]}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
