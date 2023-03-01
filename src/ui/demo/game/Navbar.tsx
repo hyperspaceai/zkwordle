@@ -8,14 +8,14 @@ import HowToPlay from "./HowToPlay";
 
 export const Navbar = () => {
   return (
-    <Box>
+    <Box borderBottom={1} borderColor="gray.600" borderStyle="solid">
       <Flex
         align="center"
-        borderBottom={1}
-        borderColor="gray.600"
-        borderStyle="solid"
         color="white"
+        justify={{ base: "center", md: "center" }}
+        maxW="8xl"
         minH="60px"
+        mx="auto"
         px={{ base: 4 }}
         py={{ base: 2, md: 4 }}
         shadow="md"
