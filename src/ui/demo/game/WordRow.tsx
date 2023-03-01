@@ -12,6 +12,7 @@ interface WordRowProps {
   checkingGuess: boolean;
   className?: string;
   showChar?: boolean;
+  proof?: boolean;
 }
 const WordRow = ({
   letters: lettersProp = "",
@@ -20,6 +21,7 @@ const WordRow = ({
   currentRow,
   className = "",
   showChar = true,
+  proof = false,
 }: WordRowProps) => {
   const lettersRemaining = LETTER_LENGTH - lettersProp.length;
   const letters = lettersProp.split("").concat(Array(lettersRemaining).fill(""));
@@ -36,13 +38,14 @@ const WordRow = ({
               index={index}
               state={result[index]}
               value={showChar ? char : ""}
+              proof={proof}
             />
           );
         }
         return null;
       })}
       {[...Array(5 - letters.join("").length)].map((_, index) =>
-        index === 0 && currentRow ? <EmptyTile key={index} showCursor /> : <EmptyTile key={index} />,
+        index === 0 && currentRow ? <EmptyTile key={index} showCursor /> : <EmptyTile key={index} proof={proof} />,
       )}
     </HStack>
   );

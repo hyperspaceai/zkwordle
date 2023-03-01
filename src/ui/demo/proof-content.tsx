@@ -1,4 +1,3 @@
-import type { BoxProps } from "@chakra-ui/react";
 import { Box, Button, Divider, Flex, Heading, Icon, Text, VStack } from "@chakra-ui/react";
 import type { Proof } from "@prisma/client";
 import Link from "next/link";
@@ -12,7 +11,6 @@ import { GUESS_LENGTH } from "@/store/store";
 import { computeGuess } from "@/utils/word";
 
 import { BrandLogo } from "../brand/logo";
-import NavBar from "./game/NavbarOld";
 import WordRow from "./game/WordRow";
 
 interface VerifyProof {
@@ -21,7 +19,7 @@ interface VerifyProof {
   error?: string;
 }
 
-const ProofContent = (props: BoxProps) => {
+const ProofContent = () => {
   const router = useRouter();
   const id = router.query.id;
   const { verifyProof, worker } = useWorker();
@@ -73,74 +71,60 @@ const ProofContent = (props: BoxProps) => {
   if (isLoading) return null;
 
   return (
-    <Flex
-      _before={{
-        bgColor: "gray.900",
-        content: '""',
-        inset: 0,
-        opacity: 0.9,
-        pos: "absolute",
-        rounded: "inherit",
-        zIndex: -1,
-      }}
-      borderColor="gray.700"
-      borderWidth={1}
-      flexDir="column"
-      pos="relative"
-      rounded="xl"
-      {...props}
-    >
-      <NavBar />
-      <Flex alignItems="center" direction="column" gap="8" h="full" justifyContent="center" mx="auto">
-        <Text
-          fontSize="2xl"
-          p="12"
-          padding="8"
-          sx={{ "& span": { color: "pink.400" } }}
-          textAlign="left"
-          w="container.sm"
-        >
-          When you verify a proof, the proof associated with the ID: <span>{proof?.id}</span> is fetched and then
-          verified here in your browser showing the validity of the guesses you see below, displayed as colored squares.
-        </Text>
-        <VStack>
-          {rows.map(({ word, result }, index) => (
-            <WordRow
-              key={word + String(index)}
-              checkingGuess={false}
-              currentRow={false}
-              letters={word}
-              result={result}
-              showChar={false}
-            />
-          ))}
-        </VStack>
+    <Flex alignItems="center" direction="column" h="full" justify={{ base: "space-between", md: "center" }} mx="auto">
+      <Text
+        fontSize={{ base: "md", md: "2xl" }}
+        padding={{ base: "4", md: "8" }}
+        sx={{ "& span": { color: "pink.400" } }}
+        textAlign="left"
+        w={{ base: "full", md: "container.sm" }}
+      >
+        When you verify a proof, the proof associated with the ID: <span>{proof?.id}</span> is fetched and then verified
+        here in your browser showing the validity of the guesses you see below, displayed as colored squares.
+      </Text>
+      <VStack>
+        {rows.map(({ word, result }, index) => (
+          <WordRow
+            key={word + String(index)}
+            checkingGuess={false}
+            currentRow={false}
+            letters={word}
+            proof
+            result={result}
+            showChar={false}
+          />
+        ))}
+      </VStack>
 
-        <Flex direction="column" p="12" w="container.sm">
-          {validProof?.error && <Error />}
-          {!validProof?.error && (
-            <>
-              <ValidProofDetails isValid={validProof?.result} timeTaken={validProof?.time_taken} />
-              <Button
-                _active={{ transform: "scale(0.98)" }}
-                _hover={{ bgColor: "gray.900" }}
-                bgColor="black"
-                border="1px"
-                borderColor="brand.primary"
-                fontSize="2xl"
-                leftIcon={<BrandLogo boxSize={8} color="brand.primary" />}
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onClick={() => handleVerify()}
-                p="12"
-                padding="8"
-                textColor="gray.300"
-                variant="solid"
-              >
-                {validProof === undefined ? "Verify Proof" : "Re-Verify Proof"}
-              </Button>
-            </>
-          )}
-        </Flex>
+      <Flex
+        direction="column"
+        padding={{ base: "4", md: "12" }}
+        w={{ base: "full", md: "container.sm" }}
+        gap={{ base: 2 }}
+      >
+        {validProof?.error && <Error />}
+        {!validProof?.error && (
+          <>
+            <ValidProofDetails isValid={validProof?.result} timeTaken={validProof?.time_taken} />
+            <Button
+              _active={{ transform: "scale(0.98)" }}
+              _hover={{ bgColor: "gray.900" }}
+              bgColor="black"
+              border="1px"
+              borderColor="brand.primary"
+              fontSize="2xl"
+              leftIcon={<BrandLogo boxSize={8} color="brand.primary" />}
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={() => handleVerify()}
+              p="12"
+              padding="8"
+              textColor="gray.300"
+              variant="solid"
+            >
+              {validProof === undefined ? "Verify Proof" : "Re-Verify Proof"}
+            </Button>
+          </>
+        )}
       </Flex>
     </Flex>
   );
@@ -149,27 +133,32 @@ export default ProofContent;
 
 const ValidProofDetails = ({ isValid, timeTaken }: { isValid?: boolean; timeTaken?: number }) => {
   return (
-    <Flex alignItems="center" gap="4" justify="space-between" mb="8">
+    <Flex
+      alignItems="center"
+      gap={{ base: 2, md: 4 }}
+      justify={{ base: "center", md: "space-between" }}
+      mb={{ base: 2, md: 8 }}
+    >
       <Flex justify="center" w="50%">
         <Box alignItems="center" textAlign="center" w="full">
-          <Heading as="h5" size="xl" textColor={`${isValid === undefined ? "gray.500" : "#fff"}`}>
+          <Heading as="h5" size={{ base: "md", md: "xl" }} textColor={`${isValid === undefined ? "gray.500" : "#fff"}`}>
             {isValid === undefined && "Pending"}
             {isValid !== undefined && isValid && "Verified Proof"}
             {isValid !== undefined && !isValid && "Invalid Proof"}
           </Heading>
         </Box>
       </Flex>
-      <Divider borderColor="gray.400" borderWidth="2px" h="50" orientation="vertical" />
+      <Divider borderColor="gray.400" borderWidth={{ base: "1px", md: "2px" }} orientation="vertical" />
       <Flex alignItems="center" justify="center" w="50%">
         <Box alignItems="center" textAlign="center" w="full">
-          <Heading as="h5" size="md" whiteSpace="nowrap">
+          <Heading as="h5" size={{ base: "sm", md: "md" }} whiteSpace="nowrap">
             Verification Time
           </Heading>
           <Box as="span" color="gray.100">
-            <Box as="span" color="gray.100" fontSize="4xl" fontWeight="bold">
+            <Box as="span" color="gray.100" fontSize={{ base: "xl", md: "4xl" }} fontWeight="bold">
               {timeTaken ? timeTaken : "--"}
             </Box>
-            <Box as="span" color="gray.300" fontSize="md" ml="1">
+            <Box as="span" color="gray.300" fontSize={{ base: "sm", md: "md" }} ml="1">
               ms
             </Box>
           </Box>
