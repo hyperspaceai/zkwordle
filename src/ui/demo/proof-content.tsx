@@ -12,7 +12,7 @@ import { GUESS_LENGTH } from "@/store/store";
 import { computeGuess } from "@/utils/word";
 
 import { BrandLogo } from "../brand/logo";
-import NavBar from "./game/Navbar";
+import NavBar from "./game/NavbarOld";
 import WordRow from "./game/WordRow";
 
 interface VerifyProof {

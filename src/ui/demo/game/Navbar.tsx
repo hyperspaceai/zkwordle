@@ -1,56 +1,62 @@
-import { Button, Flex, HStack, Icon } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { BsGlobe } from "react-icons/bs";
-import { FaDiscord, FaTwitter } from "react-icons/fa";
+import { Box, Flex, HStack, Link, Stack, Text, useBreakpointValue } from "@chakra-ui/react";
+import NextLink from "next/link";
+
+import { BrandLogo } from "@/ui/brand/logo";
 
 import GameModal from "./GameModal";
 import HowToPlay from "./HowToPlay";
 
-const NavBar = () => {
-  const router = useRouter();
+export const Navbar = () => {
   return (
-    <Flex alignItems="center" h="6vh" justifyContent="space-between" pt={4} px={6}>
-      <HStack>
-        <Button
-          as="a"
-          color="#738adb"
-          href="https://discord.com/invite/FVVN6HJcdv"
-          size={["xs", "sm", "md"]}
-          target="_blank"
-          variant="ghost"
-        >
-          <Icon as={FaDiscord} boxSize={{ base: "6", md: "8" }} />
-        </Button>
-        <Button
-          as="a"
-          color="#00acee"
-          href="https://hyperspace.foundation/"
-          size={["xs", "sm", "md"]}
-          target="_blank"
-          variant="ghost"
-        >
-          <Icon as={FaTwitter} boxSize={{ base: "6", md: "8" }} />
-        </Button>
-        <Button
-          as="a"
-          color="brand.primary"
-          href="https://hyperspace.foundation/"
-          size={["xs", "sm", "md"]}
-          target="_blank"
-          variant="ghost"
-        >
-          <Icon as={BsGlobe} boxSize={{ base: "6", md: "8" }} />
-        </Button>
-      </HStack>
-      {router.pathname === "/" && (
-        <HStack>
+    <Box>
+      <Flex
+        align="center"
+        borderBottom={1}
+        borderColor="gray.600"
+        borderStyle="solid"
+        color="white"
+        minH="60px"
+        px={{ base: 4 }}
+        py={{ base: 2, md: 4 }}
+        shadow="md"
+      >
+        <Flex flex={{ base: 1 }} justify={{ md: "start" }}>
+          <Link as={NextLink} href="/">
+            <HStack justify="center">
+              <BrandLogo boxSize={8} color="brand.primary" />
+              <Text fontWeight="bold" textAlign={useBreakpointValue({ md: "left" })}>
+                ZK-Wordle
+              </Text>
+            </HStack>
+          </Link>
+        </Flex>
+
+        <Stack direction="row" flex={{ base: 1, md: 0 }} justify="flex-end" spacing={{ base: 1, md: 6 }}>
           <HowToPlay />
 
           <GameModal />
-        </HStack>
-      )}
-    </Flex>
+        </Stack>
+      </Flex>
+    </Box>
   );
 };
 
-export default NavBar;
+interface SocialItem {
+  label: string;
+  href?: string;
+}
+
+const SOCIAL_ITEMS: SocialItem[] = [
+  {
+    label: "Discord",
+    href: "https://discord.gg/2cFmDz7",
+  },
+  {
+    label: "Twitter",
+    href: "https://twitter.com/ZK_WASM",
+  },
+  {
+    label: "Website",
+    href: "https://twitter.com/ZK_WASM",
+  },
+];

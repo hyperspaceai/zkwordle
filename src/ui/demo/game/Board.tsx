@@ -62,12 +62,13 @@ const Board = () => {
     <Flex
       alignItems="center"
       flexDir="column"
-      flexGrow={1}
+      gap="4"
       height="100%"
-      justifyContent="space-evenly"
-      overflow="hidden"
+      justify={{ base: "space-between", md: "space-around" }}
+      maxW="full"
+      pt="10"
     >
-      <VStack>
+      <VStack maxW="full" mx="auto" w="full">
         {rows.map(({ word, result }, index) => (
           <WordRow
             key={word + String(index)}

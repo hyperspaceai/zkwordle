@@ -1,4 +1,4 @@
-import { Button, HStack, Icon, VStack } from "@chakra-ui/react";
+import { Box, HStack, Icon, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AiOutlineEnter } from "react-icons/ai";
 
@@ -13,14 +13,32 @@ const Keyboard = ({ onClick }: { onClick: (letter: string) => void }) => {
   };
 
   return (
-    <VStack spacing={1}>
+    <VStack spacing={1} w={{ base: "full", md: "container.sm" }}>
       {keypadLayout.map((keyboardRow, rowIndex) => {
         return (
-          <HStack key={String(rowIndex) + (keyboardRow[rowIndex]?.key || "")} spacing={1}>
+          <HStack
+            key={String(rowIndex) + (keyboardRow[rowIndex]?.key || "")}
+            alignItems="center"
+            display="flex"
+            justifyContent="center"
+            spacing={1}
+            w="full"
+          >
+            {rowIndex === 1 && <Box flex="0.5" />}
             {keyboardRow.map((letter) => {
               const letterState = keyboardLetterState[letter.key];
-              return <KeypadKey key={letter.key} handleClick={handleClick} letter={letter} letterState={letterState} />;
+              const scale = letter.key === "Enter" || letter.key === "Backspace" ? 1.5 : 1;
+              return (
+                <KeypadKey
+                  key={letter.key}
+                  handleClick={handleClick}
+                  letter={letter}
+                  letterState={letterState}
+                  scale={scale}
+                />
+              );
             })}
+            {rowIndex === 1 && <Box flex="0.5" />}
           </HStack>
         );
       })}
@@ -47,9 +65,10 @@ interface KeypadKeyProps {
   };
   letterState: LetterState | undefined;
   handleClick: (letter: string) => void;
+  scale?: number;
 }
 
-const KeypadKey = ({ letter, handleClick, letterState }: KeypadKeyProps) => {
+const KeypadKey = ({ letter, handleClick, letterState, scale }: KeypadKeyProps) => {
   const [keypadKeyColor, setKeypadKeyColor] = useState("#fff");
   useEffect(() => {
     if (letterState !== undefined) {
@@ -68,9 +87,24 @@ const KeypadKey = ({ letter, handleClick, letterState }: KeypadKeyProps) => {
   });
 
   return (
-    <Button key={letter.key} backgroundColor={keypadKeyColor} onClick={() => handleClick(letter.key)} type="button">
+    <Box
+      key={letter.key}
+      alignItems="center"
+      backgroundColor={keypadKeyColor}
+      display="flex"
+      flex={scale ?? 1}
+      fontSize="sm"
+      fontWeight="semibold"
+      justifyContent="center"
+      minH={{ base: "8", md: "14" }}
+      onClick={() => handleClick(letter.key)}
+      rounded="md"
+      textColor="black"
+      textTransform="uppercase"
+      userSelect="none"
+    >
       {/* eslint-disable-next-line no-nested-ternary */}
       {letter.key === "Enter" ? <AiOutlineEnter /> : letter.key === "Backspace" ? backspace : letter.key.toUpperCase()}
-    </Button>
+    </Box>
   );
 };
