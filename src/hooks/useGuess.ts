@@ -134,7 +134,7 @@ export const useGuess = (): GuessHook => {
           }
       }
       if (currGuess.length === LETTER_LENGTH) return currGuess;
-      return newGuess;
+      return newGuess.toLowerCase();
     });
   };
 
