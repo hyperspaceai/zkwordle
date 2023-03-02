@@ -1,6 +1,5 @@
-import { Box, Flex, Icon, Tooltip } from "@chakra-ui/react";
+import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { FaGamepad } from "react-icons/fa";
 
 import { useTotalGamesStore } from "@/store/totalGames";
 
@@ -11,7 +10,7 @@ export const GamesPlayed = () => {
     <Flex justify="end" maxW="8xl" px={{ base: 8 }} w="full">
       <Tooltip label="Total games played" placement="bottom">
         <Flex alignItems="center" gap="2" justify="center">
-          <Icon as={FaGamepad} boxSize={{ base: "6", md: "10" }} color="pink.200" />
+          <Text>Total Wordles played</Text>
 
           <NumberCounter target={amount} />
         </Flex>
@@ -38,7 +37,7 @@ const NumberCounter = ({ target, time = 500, start = 0 }: { target: number; time
   }, [current, start, target, time]);
 
   return (
-    <Box display="inline-block" fontSize="xl" fontWeight="bold" position="relative">
+    <Box display="inline-block" fontSize="xl" fontWeight="bold" minW="4" position="relative">
       {Math.round(current)}
     </Box>
   );
