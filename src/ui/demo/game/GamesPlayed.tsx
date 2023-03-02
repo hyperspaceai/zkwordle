@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 import { useTotalGamesStore } from "@/store/totalGames";
@@ -8,13 +8,10 @@ export const GamesPlayed = () => {
 
   return (
     <Flex justify="end" maxW="8xl" px={{ base: 8 }} w="full">
-      <Tooltip label="Total games played" placement="bottom">
-        <Flex alignItems="center" gap="2" justify="center">
-          <Text>Total Wordles played</Text>
-
-          <NumberCounter target={amount} />
-        </Flex>
-      </Tooltip>
+      <Flex alignItems="center" gap="2" justify="center">
+        <Text>Total Wordles played</Text>
+        <NumberCounter target={amount} />
+      </Flex>
     </Flex>
   );
 };
