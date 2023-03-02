@@ -21,6 +21,7 @@ const fontBlack = "RGBA(0, 0, 0, 0.92)";
 const CharacterTile = ({ value, state, checkingGuess, index, currentIndex, proof = false }: CharacterBoxProps) => {
   // function mapColor is used to change the default html color for custom hex color
   const mapColor = (letterState: LetterState | undefined) => {
+    console.log(letterState);
     switch (letterState) {
       case LetterState.Miss:
         return "#D4D4D8";
@@ -32,17 +33,29 @@ const CharacterTile = ({ value, state, checkingGuess, index, currentIndex, proof
         return "#fff";
     }
   };
+  const mapHsl = (letterState: LetterState | undefined) => {
+    switch (letterState) {
+      case LetterState.Miss:
+        return "hsl(0 0% 52% / 90%)";
+      case LetterState.Match:
+        return "hsl(143 29% 50% / 90%)";
+      case LetterState.Present:
+        return "hsl(60 60% 39% / 90%)";
+      default:
+        return "hsl(0 0% 52% / 90%)";
+    }
+  };
 
   // flip keyframes is used when the user submit a Wordle
   const flip = keyframes`
     0% {
       transform: rotateX(0);
-      background-color: transparent;
+      background-color: white;
       border-color: ${defaultBorderColor};
     }
     45% {
       transform: rotateX(90deg);
-      background-color: transparent;
+      background-color: white;
       border-color: ${defaultBorderColor}
     }
     55% {
@@ -62,14 +75,13 @@ const CharacterTile = ({ value, state, checkingGuess, index, currentIndex, proof
   const bounce = keyframes`
     0% {
       transform: scale(1);
-      border-color: ${defaultBorderColor}
+      
     }
     50% {
       transform: scale(1.1);
     }
     100% {
       transform: scale(1);
-      border-color: gray
     }
   `;
 
@@ -90,14 +102,16 @@ const CharacterTile = ({ value, state, checkingGuess, index, currentIndex, proof
   return (
     <Center
       animation={animation}
-      border="1px"
       borderColor="gray.300"
+      backgroundColor="white"
       h={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
       sx={{ animationDelay: delay, animationFillMode: "forwards" }} // backgroundColor come from animationFillMode forwards
       userSelect="none"
       w={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
+      borderRadius="md"
+      boxShadow={`2px 2px 10px 0px hsl(0 5% 52%), inset -4px -4px 8px 1px ${mapHsl(state)}`}
     >
-      <Text fontSize="x-large" fontWeight="bold">
+      <Text fontSize="x-large" fontWeight="bold" textColor="black">
         {value?.toUpperCase()}
       </Text>
     </Center>
@@ -121,10 +135,15 @@ const blink = keyframes`
 export const EmptyTile = ({ showCursor, proof = false }: { showCursor?: boolean; proof?: boolean }) => (
   <Center
     border="1px"
-    borderColor="gray.300"
+    borderColor="gray.800"
     h={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
     userSelect="none"
     w={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
+    borderRadius="md"
+    // boxShadow={`1px 1px 8px 0px hsl(0 0% 20%), inset -4px -4px 8px 1px hsl(0 0% 10% / 90%)`}
+    // backgroundColor="#323638"
+    backgroundColor="#fff"
+    boxShadow={`2px 2px 10px 0px hsl(0 5% 52%), inset -3px -4px 8px 1px hsl(0 0% 52% / 90%)`}
   >
     {showCursor && (
       <Text animation={`${blink} 2s infinite ease`} fontSize="x-large">
@@ -133,3 +152,6 @@ export const EmptyTile = ({ showCursor, proof = false }: { showCursor?: boolean;
     )}
   </Center>
 );
+
+// rgb(93 101 105) 2px 2px 10px 0px, rgb(24 26 27) -4px -4px 8px 1px inset;
+// 2px 2px 10px 0px hsl(0deg 5% 52%), inset -3px -4px 8px 1px hsl(0deg 0% 52% / 90%)

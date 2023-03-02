@@ -10,7 +10,6 @@ interface WordRowProps {
   result?: LetterState[];
   currentRow: boolean;
   checkingGuess: boolean;
-  className?: string;
   showChar?: boolean;
   proof?: boolean;
 }
@@ -19,7 +18,6 @@ const WordRow = ({
   result = [],
   checkingGuess,
   currentRow,
-  className = "",
   showChar = true,
   proof = false,
 }: WordRowProps) => {
