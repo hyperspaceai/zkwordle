@@ -24,10 +24,10 @@ const Keyboard = ({ onClick }: { onClick: (letter: string) => void }) => {
             spacing={1}
             w="full"
           >
-            {rowIndex === 1 && <Box flex="0.5" />}
+            {rowIndex === 1 && <Box flex="0.25" />}
             {keyboardRow.map((letter) => {
               const letterState = keyboardLetterState[letter.key];
-              const scale = letter.key === "Enter" || letter.key === "Backspace" ? 1.5 : 1;
+              const scale = letter.key === "Enter" || letter.key === "z" ? 1.5 : 1;
               return (
                 <KeypadKey
                   key={letter.key}
@@ -38,7 +38,7 @@ const Keyboard = ({ onClick }: { onClick: (letter: string) => void }) => {
                 />
               );
             })}
-            {rowIndex === 1 && <Box flex="0.5" />}
+            {rowIndex === 1 && <Box flex="0.25" />}
           </HStack>
         );
       })}

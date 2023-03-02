@@ -21,16 +21,7 @@ export const keypadLayout = [
     { key: "j" },
     { key: "k" },
     { key: "l" },
-  ],
-  [
     { key: "Backspace" },
-    { key: "z" },
-    { key: "x" },
-    { key: "c" },
-    { key: "v" },
-    { key: "b" },
-    { key: "n" },
-    { key: "m" },
-    { key: "Enter" },
   ],
+  [{ key: "z" }, { key: "x" }, { key: "c" }, { key: "v" }, { key: "b" }, { key: "n" }, { key: "m" }, { key: "Enter" }],
 ];
