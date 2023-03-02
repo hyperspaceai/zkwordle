@@ -1,6 +1,6 @@
 {
-  "name": "zkWorlde",
-  "shortName": "zkWorlde",
+  "name": "zkWordle",
+  "shortName": "zkWordle",
   "description": "Guess todays word and the result you got will be packaged in a shareable proof using our ZKWasm runtime",
   "domain": "zkWordle.com",
   "email": "hey@hyperspace.foundation",
