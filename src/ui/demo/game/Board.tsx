@@ -68,12 +68,11 @@ const Board = () => {
       maxW="full"
       pt="10"
     >
-      <VStack maxW="full" mx="auto" w="full">
+      <VStack gap={{ base: 1, md: 2 }} maxW="full" mx="auto" w="full">
         {rows.map(({ word, result }, index) => (
           <WordRow
             key={word + String(index)}
             checkingGuess={checkingGuess}
-            className={showInvalidGuess && index === currentRow ? "animate-bounce" : ""}
             currentRow={index === currentRow}
             letters={word}
             result={result}

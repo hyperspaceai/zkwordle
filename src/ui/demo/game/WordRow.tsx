@@ -10,7 +10,6 @@ interface WordRowProps {
   result?: LetterState[];
   currentRow: boolean;
   checkingGuess: boolean;
-  className?: string;
   showChar?: boolean;
   proof?: boolean;
 }
@@ -19,7 +18,6 @@ const WordRow = ({
   result = [],
   checkingGuess,
   currentRow,
-  className = "",
   showChar = true,
   proof = false,
 }: WordRowProps) => {
@@ -27,7 +25,7 @@ const WordRow = ({
   const letters = lettersProp.split("").concat(Array(lettersRemaining).fill(""));
 
   return (
-    <HStack gap="4" justify="center">
+    <HStack gap={{ base: 1, md: 2 }} justify="center">
       {letters.map((char, index) => {
         if (char !== "") {
           return (
@@ -36,9 +34,9 @@ const WordRow = ({
               checkingGuess={checkingGuess}
               currentIndex={lettersProp.length - 1}
               index={index}
+              proof={proof}
               state={result[index]}
               value={showChar ? char : ""}
-              proof={proof}
             />
           );
         }

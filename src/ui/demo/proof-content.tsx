@@ -99,7 +99,7 @@ const ProofContent = () => {
         When you verify a proof, the proof associated with the ID: <span>{proof?.id}</span> is fetched and then verified
         here in your browser showing the validity of the guesses you see below, displayed as colored squares.
       </Text>
-      <VStack>
+      <VStack gap={{ base: 1, md: 2 }}>
         {rows.map(({ word, result }, index) => (
           <WordRow
             key={word + String(index)}
