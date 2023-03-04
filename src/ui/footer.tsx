@@ -49,7 +49,7 @@ export const Footer = () => {
           <SocialButton href="https://discord.com/invite/FVVN6HJcdv" label="Discord">
             <FaDiscord />
           </SocialButton>
-          <SocialButton href="https://hyperspace.foundation/" label="Twitter">
+          <SocialButton href="https://twitter.com/hyperspaceorg/" label="Twitter">
             <FaTwitter />
           </SocialButton>
           <SocialButton href="https://hyperspace.foundation/" label="Website">
