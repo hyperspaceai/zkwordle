@@ -20,7 +20,7 @@ const TweetMessage = () => {
   const results = rows.map((row) => row.result.map((result) => ICON_MAP[result]).join(""));
   const URL = process.env.NEXT_PUBLIC_BASE_URL;
   const tweetMessage = encodeURI(
-    `zkWordle.com built on @HyperspaceOrg ${String(gameId).padStart(4, "0")} ${
+    `zkwordle.com built on @HyperspaceOrg ${String(gameId).padStart(4, "0")} ${
       results.length
     }/${NUMBER_OF_GUESSES}\n\n${results.join("\n")}\n\nVerify this game result is valid\n${URL}/proof/${
       validGuess?.id
@@ -48,7 +48,7 @@ const TweetMessage = () => {
     <Button
       as="a"
       colorScheme="white"
-      href={`https://twitter.com/intent/tweet?text=${tweetMessage.trimEnd()}&hashtags=zkvm,nanochain`}
+      href={`https://twitter.com/intent/tweet?text=${tweetMessage.trimEnd()}&hashtags=zkvm,nanochain,ETHDenver`}
       size={{ base: "md", md: "lg" }}
       target="_blank"
       variant="outline"
