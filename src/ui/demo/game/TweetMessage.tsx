@@ -48,7 +48,7 @@ const TweetMessage = () => {
     <Button
       as="a"
       colorScheme="white"
-      href={`https://twitter.com/intent/tweet?text=${tweetMessage.trimEnd()}&hashtags=zkvm,nanochain,ETHDenver`}
+      href={`https://twitter.com/intent/tweet?text=${tweetMessage.trimEnd()}&hashtags=zkvm,nanochain`}
       size={{ base: "md", md: "lg" }}
       target="_blank"
       variant="outline"
