@@ -9,7 +9,7 @@ export const GamesPlayed = () => {
   return (
     <Flex justify="end" maxW="8xl" px={{ base: 8 }} w="full">
       <Flex alignItems="center" gap="2" justify="center">
-        <Text>Total Wordles played</Text>
+        <Text>Total games played</Text>
         <NumberCounter target={amount} />
       </Flex>
     </Flex>
