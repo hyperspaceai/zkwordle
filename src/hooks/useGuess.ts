@@ -46,23 +46,27 @@ export const useGuess = (): GuessHook => {
     const words = rows.map((r) => r.word);
     const results = rows.map((r) => r.result);
 
-    const data = await validateGuesses(answer, words, results);
-    if (!data) return;
+    try {
+      const data = await validateGuesses(answer, words, results);
+      if (!data) return;
 
-    const { proof, result, proving_time, execution_time } = data;
+      const { proof, result, proving_time, execution_time } = data;
 
-    const newProof = await addValidProofToDB({
-      gameId,
-      answer,
-      gameState: currentGameState,
-      guesses: words,
-      provingTime: Number(proving_time),
-      executionTime: Number(execution_time),
-      bytes: proof.bytes,
-      input: proof.inputs,
-    });
+      const newProof = await addValidProofToDB({
+        gameId,
+        answer,
+        gameState: currentGameState,
+        guesses: words,
+        provingTime: Number(proving_time),
+        executionTime: Number(execution_time),
+        bytes: proof.bytes,
+        input: proof.inputs,
+      });
 
-    updateProofState(newProof.id, proof, result, Number(proving_time), Number(execution_time));
+      updateProofState(newProof.id, proof, result, Number(proving_time), Number(execution_time));
+    } catch (error) {
+      console.log({ error });
+    }
   };
 
   useEffect(() => {
@@ -79,6 +83,7 @@ export const useGuess = (): GuessHook => {
     }
 
     return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showInvalidGuess]);
 
   useEffect(() => {

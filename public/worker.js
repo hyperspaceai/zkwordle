@@ -211,7 +211,7 @@ function compile_wat(source) {
 
 /**
  * @param {object} proof_obj
- * @returns {boolean}
+ * @returns {any}
  */
 function verify(proof_obj) {
   const ret = wasm.verify(addHeapObject(proof_obj));
@@ -224,8 +224,12 @@ function verify(proof_obj) {
  * @param {Array<any>} input_uint8arrays
  * @returns {any}
  */
-function execute(binary, export_name, input_uint8arrays) {
-  const ret = wasm.execute(addHeapObject(binary), addHeapObject(export_name), addHeapObject(input_uint8arrays));
+function execute_wordle_prover(binary, export_name, input_uint8arrays) {
+  const ret = wasm.execute_wordle_prover(
+    addHeapObject(binary),
+    addHeapObject(export_name),
+    addHeapObject(input_uint8arrays)
+  );
   return takeObject(ret);
 }
 
@@ -246,7 +250,7 @@ async function load(module, imports) {
         if (module.headers.get("Content-Type") != "application/wasm") {
           console.warn(
             "`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n",
-            e,
+            e
           );
         } else {
           throw e;
@@ -270,28 +274,43 @@ async function load(module, imports) {
 function getImports(externs) {
   const imports = { ...externs };
   imports.wbg = {};
+  imports.wbg.__wbg_now_920169b46172a1fe =
+    typeof Date.now == "function" ? Date.now : notDefined("Date.now");
   imports.wbg.__wbindgen_string_new = function (arg0, arg1) {
     const ret = getStringFromWasm0(arg0, arg1);
     return addHeapObject(ret);
   };
-  imports.wbg.__wbg_now_920169b46172a1fe = typeof Date.now == "function" ? Date.now : notDefined("Date.now");
   imports.wbg.__wbindgen_object_drop_ref = function (arg0) {
     takeObject(arg0);
   };
   imports.wbg.__wbg_stateget_d31b0717cb020e37 = function (arg0, arg1, arg2) {
     const ret = imports.state_get(getStringFromWasm0(arg1, arg2));
-    const ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const ptr0 = passStringToWasm0(
+      ret,
+      wasm.__wbindgen_malloc,
+      wasm.__wbindgen_realloc
+    );
     const len0 = WASM_VECTOR_LEN;
     getInt32Memory0()[arg0 / 4 + 1] = len0;
     getInt32Memory0()[arg0 / 4 + 0] = ptr0;
   };
-  imports.wbg.__wbg_stateset_5f59ba834942d092 = function (arg0, arg1, arg2, arg3) {
-    imports.state_set(getStringFromWasm0(arg0, arg1), getStringFromWasm0(arg2, arg3));
+  imports.wbg.__wbg_stateset_5f59ba834942d092 = function (
+    arg0,
+    arg1,
+    arg2,
+    arg3
+  ) {
+    imports.state_set(
+      getStringFromWasm0(arg0, arg1),
+      getStringFromWasm0(arg2, arg3)
+    );
   };
   imports.wbg.__wbindgen_string_get = function (arg0, arg1) {
     const obj = getObject(arg1);
     const ret = typeof obj === "string" ? obj : undefined;
-    var ptr0 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    var ptr0 = isLikeNone(ret)
+      ? 0
+      : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     var len0 = WASM_VECTOR_LEN;
     getInt32Memory0()[arg0 / 4 + 1] = len0;
     getInt32Memory0()[arg0 / 4 + 0] = ptr0;
@@ -306,14 +325,18 @@ function getImports(externs) {
   };
   imports.wbg.__wbg_stack_0ddaca5d1abfb52f = function (arg0, arg1) {
     const ret = getObject(arg1).stack;
-    const ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const ptr0 = passStringToWasm0(
+      ret,
+      wasm.__wbindgen_malloc,
+      wasm.__wbindgen_realloc
+    );
     const len0 = WASM_VECTOR_LEN;
     getInt32Memory0()[arg0 / 4 + 1] = len0;
     getInt32Memory0()[arg0 / 4 + 0] = ptr0;
   };
   imports.wbg.__wbg_error_09919627ac0992f5 = function (arg0, arg1) {
     try {
-      console.error(getStringFromWasm0(arg0, arg1));
+      // console.error(getStringFromWasm0(arg0, arg1));
     } finally {
       wasm.__wbindgen_free(arg0, arg1);
     }
@@ -325,7 +348,13 @@ function getImports(externs) {
   imports.wbg.__wbg_getItem_1db55b1eb4116c1e = function () {
     return handleError(function (arg0, arg1, arg2, arg3) {
       const ret = getObject(arg1).getItem(getStringFromWasm0(arg2, arg3));
-      var ptr0 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+      var ptr0 = isLikeNone(ret)
+        ? 0
+        : passStringToWasm0(
+            ret,
+            wasm.__wbindgen_malloc,
+            wasm.__wbindgen_realloc
+          );
       var len0 = WASM_VECTOR_LEN;
       getInt32Memory0()[arg0 / 4 + 1] = len0;
       getInt32Memory0()[arg0 / 4 + 0] = ptr0;
@@ -397,7 +426,11 @@ function getImports(externs) {
     const ret = getObject(arg0).buffer;
     return addHeapObject(ret);
   };
-  imports.wbg.__wbg_newwithbyteoffsetandlength_88fdad741db1b182 = function (arg0, arg1, arg2) {
+  imports.wbg.__wbg_newwithbyteoffsetandlength_88fdad741db1b182 = function (
+    arg0,
+    arg1,
+    arg2
+  ) {
     const ret = new Uint8Array(getObject(arg0), arg1 >>> 0, arg2 >>> 0);
     return addHeapObject(ret);
   };
@@ -422,7 +455,11 @@ function getImports(externs) {
   };
   imports.wbg.__wbg_set_2762e698c2f5b7e0 = function () {
     return handleError(function (arg0, arg1, arg2) {
-      const ret = Reflect.set(getObject(arg0), getObject(arg1), getObject(arg2));
+      const ret = Reflect.set(
+        getObject(arg0),
+        getObject(arg1),
+        getObject(arg2)
+      );
       return ret;
     }, arguments);
   };
@@ -434,7 +471,11 @@ function getImports(externs) {
   };
   imports.wbg.__wbindgen_debug_string = function (arg0, arg1) {
     const ret = debugString(getObject(arg1));
-    const ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const ptr0 = passStringToWasm0(
+      ret,
+      wasm.__wbindgen_malloc,
+      wasm.__wbindgen_realloc
+    );
     const len0 = WASM_VECTOR_LEN;
     getInt32Memory0()[arg0 / 4 + 1] = len0;
     getInt32Memory0()[arg0 / 4 + 0] = ptr0;
@@ -541,15 +582,19 @@ const appRes = await fetch("./pkg/release.wasm");
 const appBuffer = await appRes.arrayBuffer();
 const wasmBinary = new Uint8Array(appBuffer);
 
+
 self.onmessage = (e) => {
   let { action, args } = e.data;
-  // console.log("received message: ", action, args);
   if (action === "verify") {
     let result = verify(args[0]);
     postMessage({ operation: "result", action, result });
   } else {
-    console.log({ wasmBinary, action, args });
-    let result = execute(wasmBinary, action, args);
-    postMessage({ operation: "result", action, result });
+    try {
+      let result = execute_wordle_prover(wasmBinary, action, args);
+      postMessage({ operation: "result", action, result });
+    } catch (error) {
+     console.log('Invalid proof',error.message) 
+    }
+    
   }
 };
