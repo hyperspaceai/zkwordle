@@ -9,7 +9,7 @@ interface ProgressBarProps {
 
 export const ProgressBar = ({ index, size, label, isCurrentDayStatRow }: ProgressBarProps) => {
   return (
-    <Flex alignItems="center" justify="flex-start" m="1">
+    <Flex alignItems="center" justify="flex-start">
       <Box alignItems="center" display="flex" justifyContent="center" w="2">
         {index + 1}
       </Box>
