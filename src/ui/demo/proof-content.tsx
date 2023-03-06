@@ -116,11 +116,11 @@ const ProofContent = () => {
 
       <Flex
         direction="column"
+        gap={{ base: 2 }}
         padding={{ base: "4", md: "12" }}
         w={{ base: "full", md: "container.sm" }}
-        gap={{ base: 2 }}
       >
-        {validProof?.error && <Error />}
+        {validProof?.error ? <Error /> : null}
         {!validProof?.error && (
           <>
             <ValidProofDetails isValid={validProof?.result} timeTaken={validProof?.time_taken} />
@@ -162,7 +162,7 @@ const ValidProofDetails = ({ isValid, timeTaken }: { isValid?: boolean; timeTake
         <Box alignItems="center" textAlign="center" w="full">
           <Heading as="h5" size={{ base: "md", md: "xl" }} textColor={`${isValid === undefined ? "gray.500" : "#fff"}`}>
             {isValid === undefined && "Pending"}
-            {isValid !== undefined && isValid && "Verified Proof"}
+            {isValid !== undefined && isValid ? "Verified Proof" : null}
             {isValid !== undefined && !isValid && "Invalid Proof"}
           </Heading>
         </Box>

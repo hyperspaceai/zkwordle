@@ -1,5 +1,6 @@
 import type { IconProps } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/react";
+
 import type { OmitChildren } from "@/utils/react";
 
 export const BrandLogo = (props: OmitChildren<IconProps>) => {

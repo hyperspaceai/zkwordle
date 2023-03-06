@@ -126,10 +126,10 @@ export const EmptyTile = ({ showCursor, proof = false }: { showCursor?: boolean;
     userSelect="none"
     w={[`${proof ? "40" : "50"}px`, "55px", "60px"]}
   >
-    {showCursor && (
+    {showCursor ? (
       <Text animation={`${blink} 2s infinite ease`} fontSize="x-large">
         _
       </Text>
-    )}
+    ) : null}
   </Center>
 );

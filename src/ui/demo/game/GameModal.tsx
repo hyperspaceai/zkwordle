@@ -66,12 +66,12 @@ const GameModal = () => {
           </ModalBody>
           <ModalFooter>
             <Flex direction="column" gap="4" w="full">
-              {isGameOver && (
+              {isGameOver ? (
                 <>
                   <GameTimers />
                   <Divider />
                 </>
-              )}
+              ) : null}
 
               <Flex alignItems="center" justify="space-between" w="full">
                 <Flex justify="flex-start" w="50%">

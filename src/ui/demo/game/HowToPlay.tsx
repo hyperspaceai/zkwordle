@@ -42,7 +42,7 @@ const HowToPlay = () => {
       <Modal isCentered isOpen={isOpen} motionPreset="slideInBottom" onClose={onClose} size={["xs", "md", "lg"]}>
         <ModalOverlay />
         <ModalContent alignItems="center" textAlign={{ base: "left", md: "center" }}>
-          <ModalHeader pb={{ base: 0, md: 4 }} fontSize={{ base: "md", md: "xl" }}>
+          <ModalHeader fontSize={{ base: "md", md: "xl" }} pb={{ base: 0, md: 4 }}>
             How To Play
           </ModalHeader>
           <ModalCloseButton />
@@ -115,7 +115,7 @@ const HowToPlay = () => {
               <Text fontSize={{ base: "md", md: "xl" }} fontWeight="semibold">
                 Proof Verification
               </Text>
-              <Text fontSize={{ base: "xs", md: "sm" }} display={{ base: "none", md: "block" }}>
+              <Text display={{ base: "none", md: "block" }} fontSize={{ base: "xs", md: "sm" }}>
                 In this context, a Zero Knowledge (ZK) proof refers to a proof that demonstrates the occurrence of a
                 specific computation. What&apos;s unique about ZK proofs is that you can verify the proof&apos;s
                 accuracy without having to re-execute the original computation.

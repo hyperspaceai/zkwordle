@@ -42,6 +42,7 @@ const WordRow = ({
         }
         return null;
       })}
+      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       {[...Array(5 - letters.join("").length)].map((_, index) =>
         index === 0 && currentRow ? <EmptyTile key={index} showCursor /> : <EmptyTile key={index} proof={proof} />,
       )}

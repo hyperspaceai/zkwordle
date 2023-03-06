@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 export const useIntervalAsync = (fn: () => Promise<unknown>, ms: number) => {
   const timeout = useRef<number>();

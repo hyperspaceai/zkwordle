@@ -66,6 +66,7 @@ export const useGuess = (): GuessHook => {
 
       updateProofState(newProof.id, proof, result, Number(proving_time), Number(execution_time));
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       console.log({ error });
     }
   };

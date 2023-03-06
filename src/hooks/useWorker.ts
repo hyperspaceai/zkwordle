@@ -30,6 +30,7 @@ const useWorker = () => {
     });
     return new Promise<ValidateGuessResponse>((resolve) => {
       workerRef.current?.addEventListener("message", (e) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
         if (operation === "result" && action === "validateGuesses") {
           resolve(result as ValidateGuessResponse);
@@ -46,6 +47,7 @@ const useWorker = () => {
       });
       return new Promise<VerifyProofResponse>((resolve) => {
         workerRef.current?.addEventListener("message", (e) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const { responseBuffer: _responseBuffer, operation, args, action, result } = e.data;
           if (operation === "result" && action === "verify") {
             resolve(result as VerifyProofResponse);
@@ -68,6 +70,7 @@ const useWorker = () => {
       switch (operation) {
         case "state_get": {
           const db = await initDb();
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const value = await db.get(STORE_NAME, args[0] as string);
 
           if (value instanceof Uint8Array) {

@@ -1,5 +1,7 @@
-import { GameState } from "@/store/store";
-import { Proof } from "@prisma/client";
+import type { Proof } from "@prisma/client";
+
+import type { GameState } from "@/store/store";
+
 import wordBank from "./word-bank.json";
 
 export const LETTER_LENGTH = 5;
@@ -40,7 +42,7 @@ export const computeGuess = (guess: string, answerString: string): LetterState[]
 };
 
 export const getRandomWord = () => {
-  return wordBank.valid[Math.floor(Math.random() * wordBank.valid.length)] as string;
+  return wordBank.valid[Math.floor(Math.random() * wordBank.valid.length)]!;
 };
 
 export const isValidWord = (word: string): boolean => {
