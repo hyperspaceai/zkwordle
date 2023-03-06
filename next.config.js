@@ -19,7 +19,12 @@ const nextConfig = {
   redirects: async () => [],
   rewrites: async () => [],
   trailingSlash: true,
-  webpack: (config, { dev, webpack }) => {
+  webpack: (config) => {
+    // https://github.com/vercel/next.js/issues/12557
+    config.module.rules.push({
+      test: /ui\/.*index\.tsx?/i,
+      sideEffects: false,
+    });
     return config;
   },
 };
