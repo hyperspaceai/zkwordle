@@ -23,7 +23,7 @@ type ValidateGuessResponseWithNumbers = ValidateGuessResponse & {
 export interface GameState {
   answer: string;
   gameId: number;
-  timeOffset: number;
+  gameReset: boolean;
   rows: GuessRow[];
   gameState: "playing" | "won" | "lost";
   keyboardLetterState: Record<string, LetterState>;
@@ -33,7 +33,7 @@ export interface GameState {
     answer: string;
     rows: GameState["rows"];
   };
-  newGame: ({ answer, gameId }: { answer: string; gameId: number }) => void;
+  newGame: () => void;
   validGuess?: ValidateGuessResponseWithNumbers;
   timeTaken?: number;
   validateProof: (
@@ -99,14 +99,18 @@ export const useGameStore = create<GameState>()(
         });
         return { gameState: get().gameState, answer: get().answer, gameId: get().gameId, rows: get().rows };
       };
-      const newGame = ({ answer, gameId }: { answer: string; gameId: number }) => {
+      const newGame = () => {
         set({
-          answer,
-          gameId,
+          answer: getRandomWord(),
+          gameId: -1,
+          gameReset: true,
           gameState: "playing",
           rows: [],
           keyboardLetterState: {},
         });
+        setInterval(() => {
+          set({ gameReset: false });
+        }, 2000);
       };
       const validateProof = (
         id: string,
@@ -119,8 +123,8 @@ export const useGameStore = create<GameState>()(
       };
       return {
         answer: getRandomWord(),
-        gameId: 0,
-        timeOffset: new Date().getTimezoneOffset(),
+        gameId: -1,
+        gameReset: false,
         rows: [],
         gameState: "playing",
         keyboardLetterState: {},

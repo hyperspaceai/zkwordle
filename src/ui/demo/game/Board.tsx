@@ -1,50 +1,17 @@
 import { Flex, VStack } from "@chakra-ui/react";
-import type { Word } from "@prisma/client";
-import { useEffect, useState } from "react";
 
 import { useGuess } from "@/hooks/useGuess";
 import { useHasHydrated } from "@/hooks/useHydrated";
 import { GUESS_LENGTH, useGameStore } from "@/store/store";
-import { calculateResetInterval } from "@/utils/time";
 
 import Keyboard from "./Keyboard";
 import WordRow from "./WordRow";
-
-const timeUntilNextGame = calculateResetInterval();
 
 const Board = () => {
   const hasHydrated = useHasHydrated();
   const state = useGameStore();
 
-  const { guess, setGuess, showInvalidGuess, canType, addGuessLetter, checkingGuess } = useGuess();
-
-  const [error, setError] = useState("");
-
-  const fetchWord = () => {
-    fetch("/api/todaysWord")
-      .then((res) => res.json())
-      .then((data: { word: Word }) => {
-        if (!state.answer || data.word.gameId !== state.gameId || state.answer !== data.word.word) {
-          state.newGame({ answer: data.word.word, gameId: data.word.gameId });
-          setGuess("");
-        }
-      })
-      .catch((err) => {
-        if (err instanceof Error) {
-          setError(err.message);
-        }
-      });
-  };
-
-  useEffect(() => {
-    fetchWord();
-    // ensure the date is reset at midnight UTC if user does not refresh before then
-    const interval = setInterval(() => {
-      fetchWord();
-    }, timeUntilNextGame);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { guess, canType, addGuessLetter, checkingGuess } = useGuess();
 
   let rows = [...state.rows];
   let currentRow = 0;
