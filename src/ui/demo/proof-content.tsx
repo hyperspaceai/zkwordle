@@ -1,12 +1,10 @@
 import { Box, Button, Divider, Flex, Heading, Icon, Text, useToast, VStack } from "@chakra-ui/react";
 import type { Proof } from "@prisma/client";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 
 import useWorker from "@/hooks/useWorker";
-import type { GuessRow } from "@/store/store";
 import { GUESS_LENGTH } from "@/store/store";
 import { computeGuess } from "@/utils/word";
 
@@ -36,7 +34,6 @@ const ProofContent = ({ proof }: { proof: Proof }) => {
 
     const stateProof = { bytes: Buffer.from(proof.bytes), inputs: Buffer.from(proof.input) };
     const valid = await verifyProof(stateProof);
-    console.log({ valid });
     if (typeof valid?.result === "boolean") {
       setValidProof({ result: valid.result, time_taken: Number(valid.time_taken) });
       toast({
