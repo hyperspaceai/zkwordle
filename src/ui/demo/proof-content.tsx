@@ -56,6 +56,7 @@ const ProofContent = () => {
 
     const stateProof = { bytes: Buffer.from(proof.bytes), inputs: Buffer.from(proof.input) };
     const valid = await verifyProof(stateProof);
+    console.log({ valid });
     if (typeof valid?.result === "boolean") {
       setValidProof({ result: valid.result, time_taken: Number(valid.time_taken) });
       toast({
@@ -149,6 +150,7 @@ const ProofContent = () => {
 export default ProofContent;
 
 const ValidProofDetails = ({ isValid, timeTaken }: { isValid?: boolean; timeTaken?: number }) => {
+  const timeString = typeof timeTaken === "number" && timeTaken >= 1 ? `${timeTaken}` : `<1`;
   return (
     <Flex
       alignItems="center"
@@ -173,7 +175,7 @@ const ValidProofDetails = ({ isValid, timeTaken }: { isValid?: boolean; timeTake
           </Heading>
           <Box as="span" color="gray.100">
             <Box as="span" color="gray.100" fontSize={{ base: "xl", md: "4xl" }} fontWeight="bold">
-              {timeTaken ? timeTaken : "--"}
+              {typeof timeTaken === "number" ? timeString : "--"}
             </Box>
             <Box as="span" color="gray.300" fontSize={{ base: "sm", md: "md" }} ml="1">
               ms
