@@ -1,29 +1,28 @@
 // @ts-check
 
 const { favicons } = require("favicons");
-const { performance } = require("perf_hooks");
-const fs = require("fs/promises");
+const fs = require("node:fs/promises");
 const log = require("next/dist/build/output/log");
-const metadataJson = require("../config/metadata.json");
-const path = require("path");
+const { performance } = require("node:perf_hooks");
+
+const { cwd } = require("../src/utils/path");
+const { metadata } = require("../config/metadata");
 
 const PATH_PREFIX = "icons";
-
-const cwd = (/** @type {string[]} */ ...args) => path.resolve(process.cwd(), ...args);
 
 const faviconsScript = async () => {
   const t0 = performance.now();
   log.info("generating favicon assets");
-  await fs.mkdir(cwd(`public/${PATH_PREFIX}`)).catch(() => null);
+  await Promise.all([fs.mkdir(cwd(`public/${PATH_PREFIX}`)), fs.mkdir(cwd(`__generated__`))]).catch(() => null);
   const { files, html, images } = await favicons(cwd("public/logo.png"), {
     path: `/${PATH_PREFIX}/`,
-    appName: metadataJson.name,
-    appShortName: metadataJson.shortName,
-    appDescription: metadataJson.description,
-    developerName: metadataJson.shortName,
-    developerURL: metadataJson.url,
-    background: "#000000",
-    theme_color: "#000000",
+    appName: metadata.name,
+    appShortName: metadata.shortName,
+    appDescription: metadata.description,
+    developerName: metadata.shortName,
+    developerURL: metadata.url,
+    background: "#CBFFD9",
+    theme_color: "#CBFFD9",
     icons: { android: false, appleIcon: false, appleStartup: false, favicons: true, windows: false, yandex: false },
   });
   await Promise.all([
@@ -37,7 +36,7 @@ const faviconsScript = async () => {
 };
 
 const makeFaviconTags = (html = [""]) => {
-  return `export const FaviconTags = () => <>${html.map((h) => h.replace(/>$/, " />")).join(" ")}</>`;
+  return /* jsx */ `export const FaviconTags = () => <>${html.map((h) => h.replace(/>$/, " />")).join(" ")}</>`;
 };
 
 void faviconsScript();
