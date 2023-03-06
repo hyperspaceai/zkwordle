@@ -24,10 +24,11 @@ export const useGuess = (): GuessHook => {
   const [showInvalidGuess, setInvalidGuess] = useState(false);
   const [checkingGuess, setCheckingGuess] = useState(false);
   const [canType, setCanType] = useState(true);
-  const { addGuess, updateProofState, gameState } = useGameStore((s) => ({
+  const { addGuess, updateProofState, gameState, gameReset } = useGameStore((s) => ({
     addGuess: s.addGuess,
     updateProofState: s.validateProof,
     gameState: s.gameState,
+    gameReset: s.gameReset,
   }));
   const prevGuess = usePrevious(guess);
   const { updateStats } = useStatsStore((s) => ({ updateStats: s.updateStats }));
@@ -126,6 +127,12 @@ export const useGuess = (): GuessHook => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guess]);
+
+  useEffect(() => {
+    if (gameReset) {
+      setGuess("");
+    }
+  }, [gameReset]);
 
   const addGuessLetter = (letter: string) => {
     setGuess((currGuess) => {

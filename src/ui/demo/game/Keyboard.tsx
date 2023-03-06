@@ -77,6 +77,14 @@ interface KeypadKeyProps {
 
 const KeypadKey = ({ letter, handleClick, letterState, scale }: KeypadKeyProps) => {
   const [keypadKeyColor, setKeypadKeyColor] = useState(letter.key === "Enter" ? "pink.300" : "#fff");
+  const { gameReset } = useGameStore((s) => ({
+    gameReset: s.gameReset,
+  }));
+  useEffect(() => {
+    if (gameReset) {
+      setKeypadKeyColor("#fff");
+    }
+  }, [gameReset]);
   useEffect(() => {
     if (letterState !== undefined) {
       const setColor = setTimeout(() => {
@@ -91,7 +99,7 @@ const KeypadKey = ({ letter, handleClick, letterState, scale }: KeypadKeyProps) 
 
       return () => clearTimeout(setColor);
     }
-  });
+  }, [letterState]);
 
   return (
     <Box

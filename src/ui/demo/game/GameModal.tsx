@@ -18,8 +18,8 @@ import { BsFillBarChartFill } from "react-icons/bs";
 import type { GameState } from "@/store/store";
 import { useGameStore } from "@/store/store";
 
-import CountdownWrapper from "./CountdownWrapper";
 import GameComplete from "./GameComplete";
+import { NewGame } from "./new-game-button";
 import GameTimers from "./stats/GameTimers";
 import Stats from "./stats/Stats";
 import TweetMessage from "./TweetMessage";
@@ -74,7 +74,8 @@ const GameModal = () => {
               )}
 
               <Flex alignItems="center" justify="space-between" w="full">
-                <CountdownWrapper />
+                {/* <CountdownWrapper /> */}
+                <NewGame close={onClose} />
                 <Divider h="50" orientation="vertical" />
                 <Flex justify="flex-end" w="50%">
                   <TweetMessage />
