@@ -1,12 +1,10 @@
 import { Box, Button, Divider, Flex, Heading, Icon, Text, useToast, VStack } from "@chakra-ui/react";
 import type { Proof } from "@prisma/client";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 
 import useWorker from "@/hooks/useWorker";
-import type { GuessRow } from "@/store/store";
 import { GUESS_LENGTH } from "@/store/store";
 import { computeGuess } from "@/utils/word";
 
@@ -19,36 +17,16 @@ interface VerifyProof {
   error?: string;
 }
 
-const ProofContent = () => {
-  const router = useRouter();
-  const id = router.query.id;
+const ProofContent = ({ proof }: { proof: Proof }) => {
   const { verifyProof, worker } = useWorker();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [proof, setProof] = useState<Proof>();
-  const [rows, setRows] = useState<GuessRow[]>([]);
+  const numberOfGuessesRemaining = GUESS_LENGTH - proof.guesses.length;
+  const guesses = proof.guesses.map((guess) => ({ word: guess, result: computeGuess(guess, proof.answer) }));
+  const rows = guesses.concat(Array(numberOfGuessesRemaining).fill(""));
+
   const [validProof, setValidProof] = useState<VerifyProof | undefined>();
 
   const toast = useToast();
-
-  const getProofById = async () => {
-    setIsLoading(true);
-    const response = await fetch(`/api/proof/${id}`, {
-      method: "GET",
-      headers: { authorization: `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}` },
-    }).then((res) => res.json() as Promise<{ proof: Proof | undefined }>);
-    const data = response.proof;
-    if (data) {
-      setProof(data);
-
-      const numberOfGuessesRemaining = GUESS_LENGTH - data.guesses.length;
-      const guesses = data.guesses.map((guess) => ({ word: guess, result: computeGuess(guess, data.answer) }));
-      setRows(guesses.concat(Array(numberOfGuessesRemaining).fill("")));
-    } else {
-      setValidProof({ result: false, error: "Id not found" });
-    }
-    setIsLoading(false);
-  };
 
   const handleVerify = async () => {
     if (!worker || !proof) return;
@@ -56,7 +34,6 @@ const ProofContent = () => {
 
     const stateProof = { bytes: Buffer.from(proof.bytes), inputs: Buffer.from(proof.input) };
     const valid = await verifyProof(stateProof);
-    console.log({ valid });
     if (typeof valid?.result === "boolean") {
       setValidProof({ result: valid.result, time_taken: Number(valid.time_taken) });
       toast({
@@ -77,16 +54,6 @@ const ProofContent = () => {
       });
     }
   };
-
-  useEffect(() => {
-    if (id) {
-      getProofById().catch((err) => {
-        console.log(err);
-      });
-    }
-  }, [id]);
-
-  if (isLoading) return null;
 
   return (
     <Flex alignItems="center" direction="column" h="full" justify={{ base: "space-between", md: "center" }} mx="auto">
