@@ -74,8 +74,9 @@ const GameModal = () => {
               )}
 
               <Flex alignItems="center" justify="space-between" w="full">
-                {/* <CountdownWrapper /> */}
-                <NewGame close={onClose} />
+                <Flex justify="flex-start" w="50%">
+                  <NewGame close={onClose} />
+                </Flex>
                 <Divider h="50" orientation="vertical" />
                 <Flex justify="flex-end" w="50%">
                   <TweetMessage />
