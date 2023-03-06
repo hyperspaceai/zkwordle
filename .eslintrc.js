@@ -1,6 +1,6 @@
 // @ts-check
 
-const { getTsconfigPath } = require("@hyperspaceinc/style-guide/eslint/helpers");
+const { getTsconfigPath } = require("@hyperspaceinc/style-guide/eslint/utils/tsconfig");
 
 /** @type {import("eslint").Linter.Config} */
 const eslintConfig = {
