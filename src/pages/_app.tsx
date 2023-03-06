@@ -9,8 +9,6 @@ import Head from "next/head";
 import { theme } from "@/styles/theme";
 import { MetaTags } from "@/ui/meta-tags";
 
-export { reportWebVitals } from "next-axiom";
-
 const CustomApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>

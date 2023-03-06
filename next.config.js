@@ -20,7 +20,6 @@ const nextConfig = {
   rewrites: async () => [],
   trailingSlash: true,
   webpack: (config, { dev, webpack }) => {
-    config.plugins.push(new webpack.DefinePlugin({ __DEV__: dev, __PROD__: !dev }));
     return config;
   },
 };
