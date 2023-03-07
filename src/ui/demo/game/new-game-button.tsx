@@ -1,13 +1,18 @@
 import { Button, HStack, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 import { useGameStore } from "@/store/store";
 
 export const NewGame = ({ close }: { close: () => void }) => {
+  const router = useRouter();
   const { newGame } = useGameStore((s) => ({ newGame: s.newGame }));
 
   const handleOnClick = () => {
     newGame();
     close();
+    if (router.pathname !== "/") {
+      router.push("/").catch((e) => console.error(e));
+    }
   };
   return (
     <Button
