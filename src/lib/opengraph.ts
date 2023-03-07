@@ -1,12 +1,11 @@
 import type { ImageResponseOptions } from "@vercel/og";
+import { metadata } from "config/metadata";
 
 export const loadFontData = async () => {
   const [light, regular, bold] = await Promise.all(
-    [
-      "https://sfo3.digitaloceanspaces.com/hyperspace/hydentity/bvp-light.otf",
-      "https://sfo3.digitaloceanspaces.com/hyperspace/hydentity/bvp-regular.otf",
-      "https://sfo3.digitaloceanspaces.com/hyperspace/hydentity/bvp-bold.otf",
-    ].map((url) => fetch(url).then((res) => res.arrayBuffer())),
+    ["/fonts/bvp-light.otf", "/fonts/bvp-regular.otf", "/fonts/bvp-bold.otf"].map((url) =>
+      fetch(new URL(url, metadata.url).toString()).then((res) => res.arrayBuffer()),
+    ),
   );
   return {
     light: light!,
