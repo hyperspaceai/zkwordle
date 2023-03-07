@@ -20,11 +20,9 @@ const TweetMessage = () => {
   const results = rows.map((row) => row.result.map((result) => ICON_MAP[result]).join(""));
   const URL = process.env.NEXT_PUBLIC_BASE_URL;
   const tweetMessage = encodeURI(
-    `zkwordle.com built on @HyperspaceOrg ${String(gameId).padStart(4, "0")} ${
-      results.length
-    }/${NUMBER_OF_GUESSES}\n\n${results.join("\n")}\n\nVerify this game result is valid\n${URL}/proof/${
-      validGuess?.id
-    }\n\n`,
+    `zkwordle.com built on @HyperspaceOrg ${results.length}/${NUMBER_OF_GUESSES}\n\n${results.join(
+      "\n",
+    )}\n\nVerify this game result is valid\n${URL}/proof/${validGuess?.id}\n\n`,
   );
 
   if (!isGameOver) {
