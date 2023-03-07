@@ -52,7 +52,9 @@ const ProofPage = ({ proof }: PageProps) => {
 
   const { Seo } = useSeo({
     openGraph: {
-      images: searchParams ? [{ url: `${metadata.url}/api/og/result/?${searchParams}` }] : [],
+      images: searchParams
+        ? [{ url: `${metadata.url}/api/og/result/?${searchParams}` }]
+        : [{ url: `${metadata.url}/api/og/social/` }],
     },
   });
   return (
