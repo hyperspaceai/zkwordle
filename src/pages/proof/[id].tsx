@@ -49,9 +49,10 @@ const ProofPage = ({ proof }: PageProps) => {
   const kb = `${((Buffer.from(bytes).byteLength + Buffer.from(input).byteLength) / 1024).toFixed(1)}kb`;
   const sp = paramsSchema.parse({ verification: `${provingTime.toString()}ms`, blocks, proof: kb });
   const searchParams = new URLSearchParams({ ...sp, blocks }).toString();
+
   const { Seo } = useSeo({
     openGraph: {
-      images: [{ url: `${metadata.url}/api/og/result/?${searchParams.toString()}` }],
+      images: searchParams ? [{ url: `${metadata.url}/api/og/result/?${searchParams}` }] : [],
     },
   });
   return (
