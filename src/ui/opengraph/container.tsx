@@ -1,9 +1,11 @@
+import { metadata } from "config/metadata";
+
 export const OgContainer = ({ children }) => {
   return (
     <div
       style={{
         backgroundColor: "#141414",
-        backgroundImage: "url(https://sfo3.digitaloceanspaces.com/hyperspace/zkwordle/og-bg.png)",
+        backgroundImage: `url(${metadata.url}/og-bg.png)`,
         backgroundSize: "cover",
         color: "white",
         display: "flex",
