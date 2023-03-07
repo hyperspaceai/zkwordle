@@ -5,15 +5,14 @@ import invariant from "tiny-invariant";
 
 import { getProofData } from "@/actions/get-proof-data";
 import { useSeo } from "@/hooks/use-seo";
-import { paramsSchema } from "@/schema/opengraph";
 import { GamesPlayed } from "@/ui/demo/game/GamesPlayed";
 import { Navbar } from "@/ui/demo/game/Navbar";
 import ProofContent from "@/ui/demo/proof-content";
 import { Footer } from "@/ui/footer";
 import { Layout } from "@/ui/layout";
-import { computeGuess } from "@/utils/word";
 
 interface PageProps {
+  id: string;
   proof: Proof;
 }
 
@@ -30,6 +29,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ params }) => {
 
   return {
     props: {
+      id: params.id,
       proof: JSON.parse(stringifiedData) as Proof,
     },
     revalidate: 1,
@@ -40,19 +40,10 @@ export const getStaticPaths: GetStaticPaths = () => {
   return { paths: [], fallback: "blocking" };
 };
 
-const ProofPage = ({ proof }: PageProps) => {
-  const { answer, guesses, provingTime, bytes, input } = proof;
-
-  const numberOfGuessesRemaining = 6 - guesses.length;
-  const results = guesses.map((guess) => computeGuess(guess, answer).join(""));
-  const blocks = results.concat(Array(numberOfGuessesRemaining).fill("00000")).join("");
-  const kb = `${((Buffer.from(bytes).byteLength + Buffer.from(input).byteLength) / 1024).toFixed(1)}kb`;
-  const sp = paramsSchema.parse({ verification: `${provingTime.toString()}ms`, blocks, proof: kb });
-  const searchParams = new URLSearchParams({ ...sp, blocks }).toString();
-
+const ProofPage = ({ id, proof }: PageProps) => {
   const { Seo } = useSeo({
     openGraph: {
-      images: searchParams ? [{ url: `${metadata.url}/api/og/result/?${searchParams}` }] : [],
+      images: id ? [{ url: `${metadata.url}/api/og/result/?id=${id}` }] : [],
     },
   });
   return (
