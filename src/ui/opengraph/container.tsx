@@ -3,8 +3,8 @@ export const OgContainer = ({ children }) => {
     <div
       style={{
         backgroundColor: "#141414",
-        // backgroundImage: "url(https://sfo3.digitaloceanspaces.com/hyperspace/zkwordle/og-bg.png)",
-        // backgroundSize: "cover",
+        backgroundImage: "url(https://sfo3.digitaloceanspaces.com/hyperspace/zkwordle/og-bg.png)",
+        backgroundSize: "cover",
         color: "white",
         display: "flex",
         fontFamily: '"Be Vietnam Pro", sans-serif',
