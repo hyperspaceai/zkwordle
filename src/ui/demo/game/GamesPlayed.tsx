@@ -7,7 +7,7 @@ export const GamesPlayed = () => {
   const { amount } = useTotalGamesStore((state) => ({ amount: state.amount }));
 
   return (
-    <Flex justify="end" maxW="8xl" px={{ base: 8 }} w="full">
+    <Flex justify="end" m="auto" maxW="8xl" px={{ base: 8 }} w="full">
       <Flex alignItems="center" gap="2" justify="center">
         <Text>Total games played</Text>
         <NumberCounter target={amount} />
