@@ -20,10 +20,9 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ params }) => {
   invariant(typeof params?.id === "string", "`params.id` is required and must be a string");
   const stringifiedData = await getProofData({ id: params.id });
 
-  if (!stringifiedData) {
+  if (!JSON.parse(stringifiedData)) {
     return {
       notFound: true,
-      revalidate: 1,
     };
   }
 
