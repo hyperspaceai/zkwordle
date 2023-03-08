@@ -41,6 +41,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       bytes.length === 0 ||
       input.length === 0
     ) {
+      // eslint-disable-next-line no-console
+      console.error("Invalid body", { gameId, answer, gameState, guesses, provingTime, executionTime, bytes, input });
       return res.status(400).json({ error: "Invalid body" });
     }
 
@@ -60,7 +62,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       return res.status(200).json(proof);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return res.status(500).send("Internal server error");
     }
   } else {

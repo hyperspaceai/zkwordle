@@ -21,7 +21,7 @@ interface GuessHook {
 export const useGuess = (): GuessHook => {
   const [guess, setGuess] = useState("");
 
-  const [showInvalidGuess, setInvalidGuess] = useState(false);
+  const [showInvalidGuess, setShowInvalidGuess] = useState(false);
   const [checkingGuess, setCheckingGuess] = useState(false);
   const [canType, setCanType] = useState(true);
   const { addGuess, updateProofState, gameState, gameReset } = useGameStore((s) => ({
@@ -47,6 +47,12 @@ export const useGuess = (): GuessHook => {
     const words = rows.map((r) => r.word);
     const results = rows.map((r) => r.result);
 
+    if (!words.length || !results.length) {
+      // eslint-disable-next-line no-console
+      console.error("No words or results found", { words, results });
+      return;
+    }
+
     try {
       const data = await validateGuesses(answer, words, results);
       if (!data) return;
@@ -66,15 +72,15 @@ export const useGuess = (): GuessHook => {
 
       updateProofState(newProof.id, proof, result, Number(proving_time), Number(execution_time));
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      console.log({ error });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-console
+      console.error({ error });
     }
   };
 
   useEffect(() => {
     let id: NodeJS.Timeout;
     if (showInvalidGuess) {
-      id = setTimeout(() => setInvalidGuess(false), 1500);
+      id = setTimeout(() => setShowInvalidGuess(false), 1500);
       toast({
         title: "Invalid word!",
         position: "top-right",
@@ -115,14 +121,14 @@ export const useGuess = (): GuessHook => {
             currentState.answer,
             currentState.rows,
           ).catch((e) => {
-            console.log(e);
+            console.error(e);
           });
         }
         setCheckingGuess(true);
         setCanType(false);
-        setInvalidGuess(false);
+        setShowInvalidGuess(false);
       } else {
-        setInvalidGuess(true);
+        setShowInvalidGuess(true);
         setGuess(prevGuess);
       }
     }
