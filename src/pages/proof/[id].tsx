@@ -10,6 +10,7 @@ import { Navbar } from "@/ui/demo/game/Navbar";
 import ProofContent from "@/ui/demo/proof-content";
 import { Footer } from "@/ui/footer";
 import { Layout } from "@/ui/layout";
+import { getSearchParams } from "@/utils/searchParams";
 
 interface PageProps {
   id: string;
@@ -39,10 +40,18 @@ export const getStaticPaths: GetStaticPaths = () => {
   return { paths: [], fallback: "blocking" };
 };
 
-const ProofPage = ({ id, proof }: PageProps) => {
+const ProofPage = ({ proof }: PageProps) => {
+  const { answer, guesses, provingTime, bytes, input } = proof;
+  const searchParams = getSearchParams({
+    answer,
+    guesses,
+    provingTime: Number(provingTime),
+    bytes,
+    input,
+  });
   const { Seo } = useSeo({
     openGraph: {
-      images: id ? [{ url: `${metadata.url}/api/og/result/?id=${id}` }] : [],
+      images: [{ url: `${metadata.url}/api/og/result?${searchParams}` }],
     },
   });
   return (

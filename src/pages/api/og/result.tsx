@@ -1,31 +1,41 @@
 import { ImageResponse } from "@vercel/og";
 import { metadata } from "config/metadata";
-import type { NextApiHandler, PageConfig } from "next";
-import invariant from "tiny-invariant";
+import type { NextRequest } from "next/server";
 
 import { paramsSchema } from "@/schema/opengraph";
 import { Og } from "@/ui/opengraph";
 import { SvgHy, SvgZkwordle } from "@/ui/opengraph/svg";
 
-export const config: PageConfig = {
+export const config = {
   runtime: "edge",
 };
 
 const fonts = Promise.all(
-  ["/fonts/bvp-light.otf", "/fonts/bvp-regular.otf", "/fonts/bvp-bold.otf"].map((url) =>
+  ["/fonts/bvp-regular.otf", "/fonts/bvp-bold.otf"].map((url) =>
     fetch(new URL(url, metadata.url).toString()).then((res) => res.arrayBuffer()),
   ),
 );
 
-const handler: NextApiHandler = async (req) => {
-  invariant(typeof req.url === "string", "`req.url` is required and must be a string");
+export default async (req: NextRequest) => {
+  const [regular, bold] = await fonts;
+  let params = paramsSchema.parse({});
 
-  const url = new URL(req.url);
-  const rawParams = Object.fromEntries(url.searchParams.entries());
-  const params = await paramsSchema.parseAsync(rawParams);
-  const [light, regular, bold] = await fonts;
+  const { searchParams } = new URL(req.url);
+  const hasVerification = searchParams.has("verification");
+  const hasProof = searchParams.has("proof");
+  const hasBlocks = searchParams.has("blocks");
 
-  const response = new ImageResponse(
+  const verification = hasVerification ? searchParams.get("verification") : undefined;
+  const proof = hasProof ? searchParams.get("proof") : undefined;
+  const blocks = hasBlocks ? searchParams.get("blocks") : undefined;
+
+  params = paramsSchema.parse({
+    verification,
+    blocks,
+    proof,
+  });
+
+  return new ImageResponse(
     (
       <Og.Container>
         <div style={{ display: "flex", flexDirection: "column", gap: 48, padding: 80 }}>
@@ -34,7 +44,15 @@ const handler: NextApiHandler = async (req) => {
           <Og.Metrics data={{ Proof: params.proof, Verification: params.verification }} />
         </div>
         <div style={{ flexGrow: 1 }} />
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16, padding: 80 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: 16,
+            padding: 80,
+          }}
+        >
           <SvgHy color="#EC4899" />
           <Og.Blocks data={params.blocks} />
         </div>
@@ -44,7 +62,6 @@ const handler: NextApiHandler = async (req) => {
     {
       emoji: "twemoji",
       fonts: [
-        { name: "Be Vietnam Pro", weight: 300, data: light! },
         { name: "Be Vietnam Pro", weight: 400, data: regular! },
         { name: "Be Vietnam Pro", weight: 700, data: bold! },
       ],
@@ -53,8 +70,4 @@ const handler: NextApiHandler = async (req) => {
       debug: process.env.NODE_ENV === "development",
     },
   );
-
-  return response;
 };
-
-export default handler;
