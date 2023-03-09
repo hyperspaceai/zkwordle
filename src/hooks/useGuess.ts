@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import useStatsStore from "@/store/stats";
 import type { GameState, GuessRow } from "@/store/store";
 import { useGameStore } from "@/store/store";
+import { getSearchParams } from "@/utils/searchParams";
 import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
-import { getSearchParams } from "@/utils/searchParams";
-import { metadata } from "config/metadata";
 
 interface GuessHook {
   guess: string;
