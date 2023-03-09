@@ -20,12 +20,7 @@ const nextConfig = {
   ],
   reactStrictMode: true,
   redirects: async () => [],
-  rewrites: async () => [
-    {
-      source: "/social.png",
-      destination: "/api/og/social",
-    },
-  ],
+  rewrites: async () => [],
   trailingSlash: true,
   webpack: (config) => {
     // https://github.com/vercel/next.js/issues/12557
