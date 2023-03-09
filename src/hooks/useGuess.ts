@@ -9,6 +9,8 @@ import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
+import { getSearchParams } from "@/utils/searchParams";
+import { metadata } from "config/metadata";
 
 interface GuessHook {
   guess: string;
@@ -80,8 +82,6 @@ export const useGuess = (): GuessHook => {
       });
 
       fetch(`/api/og/result?${searchParams}`).catch((e) => {
-        console.log(e);
-      });
 
       updateProofState(newProof.id, proof, result, Number(proving_time), Number(execution_time));
     } catch (error) {
