@@ -10,7 +10,7 @@ const ICON_MAP = {
 };
 
 const TweetMessage = () => {
-  const { gameState, rows, gameId, validGuess } = useGameStore((s) => ({
+  const { gameState, rows, validGuess } = useGameStore((s) => ({
     gameId: s.gameId,
     gameState: s.gameState,
     rows: s.rows,
