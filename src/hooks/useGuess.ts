@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import useStatsStore from "@/store/stats";
 import type { GameState, GuessRow } from "@/store/store";
 import { useGameStore } from "@/store/store";
+import { getSearchParams } from "@/utils/searchParams";
 import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
-import { getSearchParams } from "@/utils/searchParams";
-import { metadata } from "config/metadata";
 
 interface GuessHook {
   guess: string;
@@ -80,7 +79,7 @@ export const useGuess = (): GuessHook => {
         input: proof.inputs,
       });
 
-      fetch(`${metadata.url}/api/og/result?${searchParams}`).catch((e) => {
+      fetch(`/api/og/result?${searchParams}`).catch((e) => {
         console.log(e);
       });
 
