@@ -79,7 +79,9 @@ export const useGuess = (): GuessHook => {
         input: proof.inputs,
       });
 
-      fetch(`${process.env.VERCEL_URL}/api/og/result?${searchParams}`).catch((e) => {
+      console.log(`${process.env.PUBLIC_NEXT_VERCEL_URL}/api/og/result?${searchParams}`);
+
+      fetch(`${process.env.PUBLIC_NEXT_VERCEL_URL}/api/og/result?${searchParams}`).catch((e) => {
         console.log(e);
       });
 
