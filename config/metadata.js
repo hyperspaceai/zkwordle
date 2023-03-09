@@ -1,6 +1,6 @@
 // @ts-check
 
-const domain = process.env.NEXT_PUBLIC_BASE_URL
+const domain = process.env.APP_URL
   ? `${process.env.APP_URL.replace(/https?:\/\//, "").split("/")[0]}`
   : process.env.NEXT_PUBLIC_VERCEL_URL ||
     process.env.VERCEL_URL ||
