@@ -65,8 +65,8 @@ export const useGuess = (): GuessHook => {
         answer,
         gameState: currentGameState,
         guesses: words,
-        provingTime: Number(proving_time),
-        executionTime: Number(execution_time),
+        provingTime: Number(Number(proving_time).toFixed(2)),
+        executionTime: Number(Number(execution_time).toFixed(2)),
         bytes: proof.bytes,
         input: proof.inputs,
       });
