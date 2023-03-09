@@ -80,7 +80,7 @@ export const useGuess = (): GuessHook => {
         input: proof.inputs,
       });
 
-      fetch(`${metadata.url}/api/og/result?${searchParams}`).catch((e) => {
+      fetch(`${process.env.VERCEL_URL}/api/og/result?${searchParams}`).catch((e) => {
         console.log(e);
       });
 
