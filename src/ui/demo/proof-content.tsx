@@ -18,7 +18,7 @@ interface VerifyProof {
 }
 
 const ProofContent = ({ proof }: { proof: Proof }) => {
-  const { verifyProof, worker } = useWorker();
+  const { verifyProof } = useWorker();
 
   const numberOfGuessesRemaining = GUESS_LENGTH - proof.guesses.length;
   const guesses = proof.guesses.map((guess) => ({ word: guess, result: computeGuess(guess, proof.answer) }));
@@ -29,7 +29,8 @@ const ProofContent = ({ proof }: { proof: Proof }) => {
   const toast = useToast();
 
   const handleVerify = async () => {
-    if (!worker || !proof) return;
+    if (!proof) return;
+
     setValidProof(undefined);
 
     const stateProof = { bytes: Buffer.from(proof.bytes), inputs: Buffer.from(proof.input) };
