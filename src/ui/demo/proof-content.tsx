@@ -18,7 +18,7 @@ interface VerifyProof {
 }
 
 const ProofContent = ({ proof }: { proof: Proof }) => {
-  const { verifyProof, worker } = useWorker();
+  const { verifyProof } = useWorker();
 
   const numberOfGuessesRemaining = GUESS_LENGTH - proof.guesses.length;
   const guesses = proof.guesses.map((guess) => ({ word: guess, result: computeGuess(guess, proof.answer) }));
@@ -29,7 +29,9 @@ const ProofContent = ({ proof }: { proof: Proof }) => {
   const toast = useToast();
 
   const handleVerify = async () => {
-    if (!worker || !proof) return;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!proof?.bytes || !proof?.input) return;
+
     setValidProof(undefined);
 
     const stateProof = { bytes: Buffer.from(proof.bytes), inputs: Buffer.from(proof.input) };
@@ -64,7 +66,7 @@ const ProofContent = ({ proof }: { proof: Proof }) => {
         textAlign="left"
         w={{ base: "full", md: "container.sm" }}
       >
-        When you verify a proof, the proof associated with the ID: <span>{proof?.id}</span> is fetched and then verified
+        When you verify a proof, the proof associated with the ID: <span>{proof.id}</span> is fetched and then verified
         here in your browser showing the validity of the guesses you see below, displayed as colored squares.
       </Text>
       <VStack gap={{ base: 1, md: 2 }}>

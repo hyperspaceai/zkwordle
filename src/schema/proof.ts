@@ -23,7 +23,7 @@ export const createProofSchema = z.object({
 });
 
 export const updateProofSchema = createProofSchema.extend({
-  id: z.number().default(-1),
+  id: z.string(),
 });
 
 export const endgameProofSchema = createProofSchema.extend({

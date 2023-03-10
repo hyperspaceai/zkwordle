@@ -11,7 +11,7 @@
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "db:push": "prisma db push",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate &&  prisma db push"
   },
   "dependencies": {
     "@chakra-ui/cli": "^2.3.0",

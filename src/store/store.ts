@@ -1,3 +1,4 @@
+import type { Proof } from "@prisma/client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -27,15 +28,16 @@ export interface GameState {
   rows: GuessRow[];
   gameState: "playing" | "won" | "lost";
   keyboardLetterState: Record<string, LetterState>;
-  addGuess: (guess: string) => {
+  addGuess: (guess: string) => Promise<{
     gameState: GameState["gameState"];
     gameId: number;
     answer: string;
     rows: GameState["rows"];
-  };
+  }>;
   newGame: () => void;
   validGuess?: ValidateGuessResponseWithNumbers;
   timeTaken?: number;
+  currentGameId?: string;
   validateProof: (
     id: string,
     proof: ValidateGuessResponse["proof"],
@@ -48,7 +50,7 @@ export interface GameState {
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => {
-      const addGuess = (word: string) => {
+      const addGuess = async (word: string) => {
         const result = computeGuess(word, get().answer);
         const didWin = result.every((i) => i === LetterState.Match);
 
@@ -59,6 +61,19 @@ export const useGameStore = create<GameState>()(
             result,
           },
         ];
+
+        if (rows.length === 1 && !didWin) {
+          const res = await fetch("/api/proof", {
+            method: "POST",
+            body: JSON.stringify({ answer: get().answer, guesses: rows.map((r) => r.word) }),
+            headers: {
+              authorization: `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}`,
+              "Content-Type": "application/json",
+            },
+          });
+          const data = (await res.json()) as Proof;
+          set({ currentGameId: data.id });
+        }
 
         const keyboardLetterState = get().keyboardLetterState;
         result.forEach((r, index) => {
@@ -107,6 +122,8 @@ export const useGameStore = create<GameState>()(
           gameState: "playing",
           rows: [],
           keyboardLetterState: {},
+          currentGameId: undefined,
+          validGuess: undefined,
         });
         setInterval(() => {
           set({ gameReset: false });

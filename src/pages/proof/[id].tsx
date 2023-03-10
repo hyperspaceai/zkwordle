@@ -14,14 +14,16 @@ import { getSearchParams } from "@/utils/searchParams";
 
 interface PageProps {
   id: string;
-  proof: Proof;
+  proof: Required<Proof>;
 }
 
 export const getStaticProps: GetStaticProps<PageProps> = async ({ params }) => {
   invariant(typeof params?.id === "string", "`params.id` is required and must be a string");
   const stringifiedData = await getProofData({ id: params.id });
+  const parsedData = JSON.parse(stringifiedData) as Proof | null;
 
-  if (!JSON.parse(stringifiedData)) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!parsedData?.bytes || !parsedData?.input || !parsedData?.provingTime) {
     return {
       notFound: true,
     };
@@ -30,7 +32,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ params }) => {
   return {
     props: {
       id: params.id,
-      proof: JSON.parse(stringifiedData) as Proof,
+      proof: parsedData as Required<Proof>,
     },
     revalidate: 1,
   };
@@ -46,8 +48,8 @@ const ProofPage = ({ proof }: PageProps) => {
     answer,
     guesses,
     provingTime: Number(provingTime),
-    bytes,
-    input,
+    bytes: bytes as Uint8Array,
+    input: input as Uint8Array,
   });
   const { Seo } = useSeo({
     openGraph: {
