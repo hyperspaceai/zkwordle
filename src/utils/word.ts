@@ -52,12 +52,16 @@ export const isValidWord = (word: string): boolean => {
 export interface ValidProofInput {
   gameId: number;
   answer: string;
-  gameState: Exclude<GameState["gameState"], "playing">;
+  gameState: GameState["gameState"];
   guesses: string[];
-  provingTime: number;
-  executionTime: number;
-  bytes: Uint8Array;
-  input: Uint8Array;
+  provingTime?: number;
+  executionTime?: number;
+  bytes?: Uint8Array;
+  input?: Uint8Array;
+}
+
+interface WithId extends ValidProofInput {
+  id: string;
 }
 
 export const addValidProofToDB = async ({
@@ -73,6 +77,38 @@ export const addValidProofToDB = async ({
   const res = await fetch("/api/proof", {
     method: "POST",
     body: JSON.stringify({
+      gameId,
+      answer,
+      gameState,
+      guesses,
+      provingTime,
+      executionTime,
+      bytes,
+      input,
+    }),
+    headers: {
+      authorization: `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}`,
+      "Content-Type": "application/json",
+    },
+  });
+  return res.json() as Promise<Proof>;
+};
+
+export const updateProofInDb = async ({
+  id,
+  gameId,
+  answer,
+  gameState,
+  guesses,
+  provingTime,
+  executionTime,
+  bytes,
+  input,
+}: WithId) => {
+  const res = await fetch("/api/proof", {
+    method: "PUT",
+    body: JSON.stringify({
+      id,
       gameId,
       answer,
       gameState,

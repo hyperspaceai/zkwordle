@@ -1,11 +1,12 @@
 import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
+import { endgameProofSchema } from "@/schema/proof";
 import useStatsStore from "@/store/stats";
 import type { GameState, GuessRow } from "@/store/store";
 import { useGameStore } from "@/store/store";
 import { getSearchParams } from "@/utils/searchParams";
-import { addValidProofToDB, isValidWord, LETTER_LENGTH } from "@/utils/word";
+import { addValidProofToDB, isValidWord, LETTER_LENGTH, updateProofInDb } from "@/utils/word";
 
 import { usePrevious } from "./usePrevious";
 import useWorker from "./useWorker";
@@ -25,11 +26,12 @@ export const useGuess = (): GuessHook => {
   const [showInvalidGuess, setShowInvalidGuess] = useState(false);
   const [checkingGuess, setCheckingGuess] = useState(false);
   const [canType, setCanType] = useState(true);
-  const { addGuess, updateProofState, gameState, gameReset } = useGameStore((s) => ({
+  const { addGuess, updateProofState, gameState, gameReset, currentGameId } = useGameStore((s) => ({
     addGuess: s.addGuess,
     updateProofState: s.validateProof,
     gameState: s.gameState,
     gameReset: s.gameReset,
+    currentGameId: s.currentGameId,
   }));
   const prevGuess = usePrevious(guess);
   const { updateStats } = useStatsStore((s) => ({ updateStats: s.updateStats }));
@@ -60,27 +62,37 @@ export const useGuess = (): GuessHook => {
 
       const { proof, result, proving_time, execution_time } = data;
 
-      const newProof = await addValidProofToDB({
+      const proofSchema = endgameProofSchema.safeParse({
         gameId,
         answer,
         gameState: currentGameState,
         guesses: words,
-        provingTime: Number(Number(proving_time).toFixed(2)),
-        executionTime: Number(Number(execution_time).toFixed(2)),
+        provingTime: Number(proving_time),
+        executionTime: Number(execution_time),
         bytes: proof.bytes,
         input: proof.inputs,
       });
+      if (!proofSchema.success) {
+        // eslint-disable-next-line no-console
+        console.error("Proof schema error", proofSchema.error);
+        return;
+      }
+
+      const newProof = currentGameId
+        ? await updateProofInDb({ ...proofSchema.data, id: currentGameId })
+        : await addValidProofToDB(proofSchema.data);
 
       const searchParams = getSearchParams({
-        answer,
-        guesses: words,
-        provingTime: Number(proving_time),
-        bytes: proof.bytes,
-        input: proof.inputs,
+        answer: proofSchema.data.answer,
+        guesses: proofSchema.data.guesses,
+        provingTime: Number(proofSchema.data.provingTime),
+        bytes: proofSchema.data.bytes as Uint8Array,
+        input: proofSchema.data.input as Uint8Array,
       });
 
       fetch(`/api/og/result?${searchParams}`).catch((e) => {
-        console.log(e);
+        // eslint-disable-next-line no-console
+        console.error(e);
       });
 
       updateProofState(newProof.id, proof, result, Number(proving_time), Number(execution_time));
@@ -124,22 +136,29 @@ export const useGuess = (): GuessHook => {
         return setGuess(prevGuess);
       }
       if (isValidWord(prevGuess)) {
-        const currentState = addGuess(prevGuess);
-        if (currentState.gameState !== "playing") {
-          setCanType(false);
-          updateStats(currentState.gameState === "won");
-          handleValidateGuesses(
-            currentState.gameState,
-            currentState.gameId,
-            currentState.answer,
-            currentState.rows,
-          ).catch((e) => {
+        addGuess(prevGuess)
+          .then((currentState) => {
+            if (currentState.gameState !== "playing") {
+              setCanType(false);
+              updateStats(currentState.gameState === "won");
+              handleValidateGuesses(
+                currentState.gameState,
+                currentState.gameId,
+                currentState.answer,
+                currentState.rows,
+              ).catch((e) => {
+                // eslint-disable-next-line no-console
+                console.error(e);
+              });
+            }
+            setCheckingGuess(true);
+            setCanType(false);
+            setShowInvalidGuess(false);
+          })
+          .catch((e) => {
+            // eslint-disable-next-line no-console
             console.error(e);
           });
-        }
-        setCheckingGuess(true);
-        setCanType(false);
-        setShowInvalidGuess(false);
       } else {
         setShowInvalidGuess(true);
         setGuess(prevGuess);

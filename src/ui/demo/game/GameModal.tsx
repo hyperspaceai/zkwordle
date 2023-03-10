@@ -49,6 +49,7 @@ const GameModal = () => {
 
       return () => clearTimeout(openModal);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGameOver, onOpen]);
   return (
     <>
