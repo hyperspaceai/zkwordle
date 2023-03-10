@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import { createProofSchema } from "@/schema/proof";
 import type { GameState } from "@/store/store";
 import { prisma } from "@/utils/db/prisma";
 
@@ -29,6 +30,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { gameId, answer, gameState, guesses, provingTime, executionTime, bytes, input } =
       req.body as ValidProofRequestBody;
+
+    const proofParams = createProofSchema.safeParse({
+      gameId,
+      answer,
+      gameState,
+      guesses,
+      provingTime,
+      executionTime,
+      bytes: Buffer.from(Object.values(bytes)),
+      input: Buffer.from(Object.values(input)),
+    });
+    console.log({ proofParams });
 
     if (
       !gameId ||

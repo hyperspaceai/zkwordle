@@ -1,6 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
+import { endgameProofSchema } from "@/schema/proof";
 import useStatsStore from "@/store/stats";
 import type { GameState, GuessRow } from "@/store/store";
 import { useGameStore } from "@/store/store";
@@ -60,16 +61,23 @@ export const useGuess = (): GuessHook => {
 
       const { proof, result, proving_time, execution_time } = data;
 
-      const newProof = await addValidProofToDB({
+      const proofSchema = endgameProofSchema.safeParse({
         gameId,
         answer,
         gameState: currentGameState,
         guesses: words,
-        provingTime: Number(Number(proving_time).toFixed(2)),
-        executionTime: Number(Number(execution_time).toFixed(2)),
+        provingTime: Number(proving_time),
+        executionTime: Number(execution_time),
         bytes: proof.bytes,
         input: proof.inputs,
       });
+      if (!proofSchema.success) {
+        // eslint-disable-next-line no-console
+        console.error("Proof schema error", proofSchema.error);
+        return;
+      }
+
+      const newProof = await addValidProofToDB(proofSchema.data);
 
       const searchParams = getSearchParams({
         answer,

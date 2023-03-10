@@ -52,12 +52,12 @@ export const isValidWord = (word: string): boolean => {
 export interface ValidProofInput {
   gameId: number;
   answer: string;
-  gameState: Exclude<GameState["gameState"], "playing">;
+  gameState: GameState["gameState"];
   guesses: string[];
-  provingTime: number;
-  executionTime: number;
-  bytes: Uint8Array;
-  input: Uint8Array;
+  provingTime?: number;
+  executionTime?: number;
+  bytes?: Uint8Array;
+  input?: Uint8Array;
 }
 
 export const addValidProofToDB = async ({

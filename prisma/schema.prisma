@@ -35,6 +35,7 @@ model Proof {
 }
 
 enum GameState {
+  playing
   lost
   won
 }
