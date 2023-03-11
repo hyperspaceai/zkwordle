@@ -1,4 +1,5 @@
 import { useToast } from "@chakra-ui/react";
+import type { Proof } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 import { endgameProofSchema } from "@/schema/proof";
@@ -26,12 +27,13 @@ export const useGuess = (): GuessHook => {
   const [showInvalidGuess, setShowInvalidGuess] = useState(false);
   const [checkingGuess, setCheckingGuess] = useState(false);
   const [canType, setCanType] = useState(true);
-  const { addGuess, updateProofState, gameState, gameReset, currentGameId } = useGameStore((s) => ({
+  const { addGuess, updateProofState, gameState, gameReset, currentGameId, setCurrentGameId } = useGameStore((s) => ({
     addGuess: s.addGuess,
     updateProofState: s.validateProof,
     gameState: s.gameState,
     gameReset: s.gameReset,
     currentGameId: s.currentGameId,
+    setCurrentGameId: s.setCurrentGameId,
   }));
   const prevGuess = usePrevious(guess);
   const { updateStats } = useStatsStore((s) => ({ updateStats: s.updateStats }));
@@ -102,6 +104,19 @@ export const useGuess = (): GuessHook => {
     }
   };
 
+  const handleFirstGuess = async ({ answer, rows }: { answer: string; rows: GuessRow[] }) => {
+    const res = await fetch("/api/proof", {
+      method: "POST",
+      body: JSON.stringify({ answer, guesses: rows.map((r) => r.word) }),
+      headers: {
+        authorization: `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = (await res.json()) as Proof;
+    setCurrentGameId(data.id);
+  };
+
   useEffect(() => {
     let id: NodeJS.Timeout;
     if (showInvalidGuess) {
@@ -136,29 +151,29 @@ export const useGuess = (): GuessHook => {
         return setGuess(prevGuess);
       }
       if (isValidWord(prevGuess)) {
-        addGuess(prevGuess)
-          .then((currentState) => {
-            if (currentState.gameState !== "playing") {
-              setCanType(false);
-              updateStats(currentState.gameState === "won");
-              handleValidateGuesses(
-                currentState.gameState,
-                currentState.gameId,
-                currentState.answer,
-                currentState.rows,
-              ).catch((e) => {
-                // eslint-disable-next-line no-console
-                console.error(e);
-              });
-            }
-            setCheckingGuess(true);
-            setCanType(false);
-            setShowInvalidGuess(false);
-          })
-          .catch((e) => {
+        const currentState = addGuess(prevGuess);
+        if (currentState.gameState !== "playing") {
+          setCanType(false);
+          updateStats(currentState.gameState === "won");
+          handleValidateGuesses(
+            currentState.gameState,
+            currentState.gameId,
+            currentState.answer,
+            currentState.rows,
+          ).catch((e) => {
             // eslint-disable-next-line no-console
             console.error(e);
           });
+        }
+        if (currentState.firstGuess) {
+          handleFirstGuess({ answer: currentState.answer, rows: currentState.rows }).catch((e) => {
+            // eslint-disable-next-line no-console
+            console.error(e);
+          });
+        }
+        setCheckingGuess(true);
+        setCanType(false);
+        setShowInvalidGuess(false);
       } else {
         setShowInvalidGuess(true);
         setGuess(prevGuess);

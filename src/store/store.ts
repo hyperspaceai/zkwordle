@@ -1,4 +1,3 @@
-import type { Proof } from "@prisma/client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -28,12 +27,13 @@ export interface GameState {
   rows: GuessRow[];
   gameState: "playing" | "won" | "lost";
   keyboardLetterState: Record<string, LetterState>;
-  addGuess: (guess: string) => Promise<{
+  addGuess: (guess: string) => {
     gameState: GameState["gameState"];
     gameId: number;
     answer: string;
     rows: GameState["rows"];
-  }>;
+    firstGuess: boolean;
+  };
   newGame: () => void;
   validGuess?: ValidateGuessResponseWithNumbers;
   timeTaken?: number;
@@ -45,12 +45,14 @@ export interface GameState {
     proving_time: number,
     execution_time: number,
   ) => void;
+  firstGuess: boolean;
+  setCurrentGameId: (id: string) => void;
 }
 
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => {
-      const addGuess = async (word: string) => {
+      const addGuess = (word: string) => {
         const result = computeGuess(word, get().answer);
         const didWin = result.every((i) => i === LetterState.Match);
 
@@ -63,16 +65,7 @@ export const useGameStore = create<GameState>()(
         ];
 
         if (rows.length === 1 && !didWin) {
-          const res = await fetch("/api/proof", {
-            method: "POST",
-            body: JSON.stringify({ answer: get().answer, guesses: rows.map((r) => r.word) }),
-            headers: {
-              authorization: `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}`,
-              "Content-Type": "application/json",
-            },
-          });
-          const data = (await res.json()) as Proof;
-          set({ currentGameId: data.id });
+          set({ firstGuess: true });
         }
 
         const keyboardLetterState = get().keyboardLetterState;
@@ -112,7 +105,13 @@ export const useGameStore = create<GameState>()(
             gameState,
           };
         });
-        return { gameState: get().gameState, answer: get().answer, gameId: get().gameId, rows: get().rows };
+        return {
+          gameState: get().gameState,
+          answer: get().answer,
+          gameId: get().gameId,
+          rows: get().rows,
+          firstGuess: get().firstGuess,
+        };
       };
       const newGame = () => {
         set({
@@ -124,6 +123,7 @@ export const useGameStore = create<GameState>()(
           keyboardLetterState: {},
           currentGameId: undefined,
           validGuess: undefined,
+          firstGuess: false,
         });
         setInterval(() => {
           set({ gameReset: false });
@@ -148,6 +148,8 @@ export const useGameStore = create<GameState>()(
         addGuess,
         newGame,
         validateProof,
+        firstGuess: false,
+        setCurrentGameId: (id: string) => set({ currentGameId: id, firstGuess: false }),
       };
     },
 
