@@ -9,7 +9,7 @@ export const paramsSchema = z.object({
   verification: z.string().default("0ms"),
   blocks: z
     .string()
-    .regex(/^[012]{30}$/)
+    .regex(/^[0123]{30}$/)
     .default(defaultBlocks)
     .transform((x) => x.split("")),
 });
