@@ -31,10 +31,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             frequencyCounts[num] = 1;
           }
         });
-        const mostCommonGuess = Object.keys(frequencyCounts).reduce((a, b) =>
-          frequencyCounts[a] > frequencyCounts[b] ? a : b,
-        );
-        mostCommonGuesses[guessKey] = mostCommonGuess;
+        const sortedGuesses = Object.keys(frequencyCounts).sort((a, b) => frequencyCounts[b] - frequencyCounts[a]);
+        const topGuesses = sortedGuesses.slice(0, 3);
+        mostCommonGuesses[guessKey] = topGuesses;
       });
     });
 
