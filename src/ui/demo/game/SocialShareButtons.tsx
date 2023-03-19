@@ -30,6 +30,7 @@ interface Content {
   hashtags?: string[];
   emailMessage?: string;
   telegramMessage?: string;
+  whatsappMessage?: string;
 }
 
 interface SocialShareOverlayProps {
@@ -118,7 +119,7 @@ const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, cont
       backgroundColor: "#3b5998",
     },
     whatsapp: {
-      url: `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`,
+      url: `https://api.whatsapp.com/send?text=${encodeURIComponent(content.whatsappMessage || message)}`,
       icon: FaWhatsapp,
       colorScheme: "whatsapp",
       backgroundColor: "#25d366",

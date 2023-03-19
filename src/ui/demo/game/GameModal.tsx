@@ -65,6 +65,14 @@ const GameModal = () => {
     "\n",
   )}\n\nWanna check my game's legit? Verify here:\n${URL}\n\nGive ZKWordle a shot and share your results! Can't wait to see how you do.\n\nHappy Wordle-ing! 🚀`;
 
+  const whatsappMessage = `${
+    gameState === "won" ? "Crushed" : "Complete"
+  } a Wordle game on zkwordle.com with zero-knowledge proof! Check my progress:\n\n${
+    results.length
+  }/${NUMBER_OF_GUESSES} guesses taken\n\n${results.join(
+    "\n",
+  )}\n\nVerify its validity:\n${URL}\n\nTry it out & share your results! 🎉`;
+
   // Open the modal after render
   useEffect(() => {
     if (isGameOver && router.pathname === "/") {
@@ -107,7 +115,7 @@ const GameModal = () => {
                 <Flex justify="flex-end" w="50%">
                   <SocialShareOverlay
                     HeaderText="Share proof"
-                    content={{ message, hashtags, emailMessage }}
+                    content={{ message, hashtags, emailMessage, whatsappMessage }}
                     url={URL}
                   />
                   {/* <TweetMessage /> */}
