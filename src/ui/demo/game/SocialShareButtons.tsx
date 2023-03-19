@@ -148,13 +148,14 @@ const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, cont
   };
 
   const handleShareClick = (url: string, platform: Platforms) => {
+    const width = 600;
+    const height = 400;
+    const left = window.screenX + window.outerWidth / 2 - width / 2;
+    const top = window.screenY + window.outerHeight / 2 - height / 2;
+
     if (platform === "email") {
       return (window.location.href = url);
     }
-    const width = 600;
-    const height = 400;
-    const left = window.screen.width / 2 - width / 2;
-    const top = window.screen.height / 2 - height / 2;
 
     const newWindow = window.open(
       url,
@@ -164,11 +165,6 @@ const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, cont
     if (newWindow) {
       newWindow.opener = null;
       newWindow.location = url;
-      newWindow.close();
-
-      if (url.includes("mailto")) {
-        newWindow.close();
-      }
 
       // Disable the address bar and navigation controls.
       newWindow.document.addEventListener("DOMContentLoaded", () => {
