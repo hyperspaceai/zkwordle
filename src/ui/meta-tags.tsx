@@ -14,7 +14,9 @@ export const MetaTags = () => {
         description: metadata.description,
         type: "website",
         site_name: metadata.name,
-        images: [{ url: `${metadata.url}/social.png`, type: "image/png", alt: metadata.name }],
+        images: [
+          { url: `${metadata.url}/social.png`, type: "image/png", alt: metadata.name, width: 1200, height: 630 },
+        ],
       }}
       twitter={{
         cardType: "summary_large_image",
