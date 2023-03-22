@@ -15,7 +15,7 @@ export const MetaTags = () => {
         type: "website",
         site_name: metadata.name,
         images: [
-          { url: `${metadata.url}/social.png`, type: "image/png", alt: metadata.name, width: 1200, height: 630 },
+          { url: `https://zkwordle.com/social.png`, type: "image/png", alt: metadata.name, width: 1200, height: 630 },
         ],
       }}
       twitter={{
