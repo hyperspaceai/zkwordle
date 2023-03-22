@@ -11,7 +11,6 @@ const ICON_MAP = {
 
 const TweetMessage = () => {
   const { gameState, rows, validGuess } = useGameStore((s) => ({
-    gameId: s.gameId,
     gameState: s.gameState,
     rows: s.rows,
     validGuess: s.validGuess,
