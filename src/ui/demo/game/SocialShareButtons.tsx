@@ -20,14 +20,16 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React from "react";
+import { isMobile } from "react-device-detect";
 import { AiOutlineMail } from "react-icons/ai";
 import { FaFacebookF, FaLinkedinIn, FaShareAlt, FaTelegramPlane, FaTwitter, FaWhatsapp } from "react-icons/fa";
 
 const MotionPopoverContent = motion(PopoverContent);
 
 interface Content {
-  message: string;
+  defaultMessage: string;
   hashtags?: string[];
+  twitterMessage?: string;
   emailMessage?: string;
   telegramMessage?: string;
   whatsappMessage?: string;
@@ -49,6 +51,9 @@ const SocialShareOverlay: React.FC<SocialShareOverlayProps> = ({
   // Define the breakpoints
   const [isSmallerThan768] = useMediaQuery("(max-width: 767px)");
 
+  const message = content.defaultMessage;
+  const hashtags = content.hashtags?.join(",");
+
   // Set the Popover placement based on the screen size
   let placement = position;
   if (isSmallerThan768) {
@@ -62,56 +67,17 @@ const SocialShareOverlay: React.FC<SocialShareOverlayProps> = ({
     transition: { duration: 0.2 },
   };
 
-  return (
-    <Popover placement={placement}>
-      <PopoverTrigger>
-        <Button aria-label="Share" border="1px solid white" colorScheme="white" size={{ base: "md", md: "lg" }}>
-          <HStack gap="1">
-            <FaShareAlt color="#00acee" />
-            <Text textColor="white">Share</Text>
-          </HStack>
-        </Button>
-      </PopoverTrigger>
-      <MotionPopoverContent minW="fit-content" {...fadeIn}>
-        <PopoverArrow />
-        <PopoverCloseButton />
-        <PopoverHeader>{HeaderText}</PopoverHeader>
-        <PopoverBody>
-          <SocialShareButtons content={content} shareLink={url} />
-        </PopoverBody>
-      </MotionPopoverContent>
-    </Popover>
-  );
-};
-
-interface ShareUrl {
-  url: string;
-  icon: React.FC;
-  colorScheme: string;
-  backgroundColor: string;
-}
-
-interface SocialShareButtonsProps {
-  shareLink: string;
-  content: Content;
-}
-
-type Platforms = "twitter" | "facebook" | "whatsapp" | "linkedin" | "telegram" | "email";
-
-const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, content }) => {
-  const message = content.message;
-  const hashtags = content.hashtags?.join(",");
-  const { hasCopied, onCopy } = useClipboard(shareLink);
-
   const shareUrls: Record<Platforms, ShareUrl> = {
     twitter: {
-      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&hashtags=${hashtags}`,
+      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        content.twitterMessage || message,
+      )}&hashtags=${hashtags}`,
       icon: FaTwitter,
       colorScheme: "twitter",
       backgroundColor: "#00acee",
     },
     facebook: {
-      url: `https://www.facebook.com/sharer/sharer.php?quote=${encodeURI(message)}&u=${encodeURI(shareLink)}&hashtag=${
+      url: `https://www.facebook.com/sharer/sharer.php?quote=${encodeURI(message)}&u=${encodeURI(url)}&hashtag=${
         hashtags && hashtags.length > 0 && `%23${hashtags}`
       }`,
       icon: FaFacebookF,
@@ -125,7 +91,7 @@ const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, cont
       backgroundColor: "#25d366",
     },
     telegram: {
-      url: `https://t.me/share/url?url=${encodeURIComponent(shareLink)}&text=${encodeURIComponent(
+      url: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(
         content.telegramMessage || message,
       )}`,
       icon: FaTelegramPlane,
@@ -133,7 +99,7 @@ const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, cont
       backgroundColor: "#0088cc",
     },
     linkedin: {
-      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareLink)}`,
+      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
       icon: FaLinkedinIn,
       colorScheme: "linkedin",
       backgroundColor: "#0e76a8",
@@ -147,6 +113,76 @@ const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, cont
       backgroundColor: "gray.500",
     },
   };
+
+  const handleMobileShare = async () => {
+    const urlRegex = /(?:https?:\/\/[^\s]+)/g;
+    try {
+      await navigator.share({
+        title: "zkWordle zero knowledge proof", // Update with your desired title
+        text: message,
+        url: urlRegex.test(message) ? undefined : url,
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("Error sharing:", err);
+    }
+  };
+
+  return (
+    <>
+      {isMobile ? (
+        <Button
+          aria-label="Share"
+          border="1px solid white"
+          colorScheme="white"
+          onClick={() => void handleMobileShare()}
+          size={{ base: "md", md: "lg" }}
+        >
+          <HStack gap="1">
+            <FaShareAlt color="#00acee" />
+            <Text textColor="white">Share</Text>
+          </HStack>
+        </Button>
+      ) : (
+        <Popover placement={placement}>
+          <PopoverTrigger>
+            <Button aria-label="Share" border="1px solid white" colorScheme="white" size={{ base: "md", md: "lg" }}>
+              <HStack gap="1">
+                <FaShareAlt color="#00acee" />
+                <Text textColor="white">Share</Text>
+              </HStack>
+            </Button>
+          </PopoverTrigger>
+          <MotionPopoverContent minW="fit-content" {...fadeIn}>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader>{HeaderText}</PopoverHeader>
+            <PopoverBody>
+              <SocialShareButtons shareLink={url} shareUrls={shareUrls} />
+            </PopoverBody>
+          </MotionPopoverContent>
+        </Popover>
+      )}
+    </>
+  );
+};
+
+interface ShareUrl {
+  url: string;
+  icon: React.FC;
+  colorScheme: string;
+  backgroundColor: string;
+}
+
+interface SocialShareButtonsProps {
+  shareLink: string;
+  shareUrls: Record<Platforms, ShareUrl>;
+}
+
+type Platforms = "twitter" | "facebook" | "whatsapp" | "linkedin" | "telegram" | "email";
+
+const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, shareUrls }) => {
+  const { hasCopied, onCopy } = useClipboard(shareLink);
 
   const handleShareClick = (url: string, platform: Platforms) => {
     const width = 600;
@@ -185,7 +221,7 @@ const SocialShareButtons: React.FC<SocialShareButtonsProps> = ({ shareLink, cont
             aria-label={`Share on ${platform}`}
             backgroundColor={backgroundColor}
             icon={<Icon />}
-            onClick={() => handleShareClick(url, platform as Platforms)}
+            onClick={() => void handleShareClick(url, platform as Platforms)}
             textColor="white"
           />
         ))}

@@ -52,7 +52,7 @@ const GameModal = () => {
   const isGameOver = gameState !== "playing";
   const results = rows.map((row) => row.result.map((result) => ICON_MAP[result]).join(""));
   const URL = `${BASE_URL}/proof/${validGuess?.id}`;
-  const message = `https://www.zkwordle.com built on @HyperspaceOrg ${
+  const twitterMessage = `https://www.zkwordle.com built on @HyperspaceOrg ${
     results.length
   }/${NUMBER_OF_GUESSES}\n\n${results.join("\n")}\n\nVerify this game result is valid\n${URL}\n\n`;
   const hashtags = ["zkvm", "nanochain"];
@@ -65,9 +65,9 @@ const GameModal = () => {
     "\n",
   )}\n\nWanna check my game's legit? Verify here:\n${URL}\n\nGive ZKWordle a shot and share your results! Can't wait to see how you do.\n\nHappy Wordle-ing! 🚀`;
 
-  const whatsappMessage = `${
+  const defaultMessage = `${
     gameState === "won" ? "Crushed" : "Complete"
-  } a Wordle game on zkwordle.com with zero-knowledge proof! Check my progress:\n\n${
+  } a Wordle game on zkwordle with zero-knowledge proof! Check my progress:\n\n${
     results.length
   }/${NUMBER_OF_GUESSES} guesses taken\n\n${results.join(
     "\n",
@@ -115,7 +115,7 @@ const GameModal = () => {
                 <Flex justify="flex-end" w="50%">
                   <SocialShareOverlay
                     HeaderText="Share proof"
-                    content={{ message, hashtags, emailMessage, whatsappMessage }}
+                    content={{ defaultMessage, hashtags, emailMessage, twitterMessage }}
                     url={URL}
                   />
                   {/* <TweetMessage /> */}
