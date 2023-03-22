@@ -53,7 +53,14 @@ const ProofPage = ({ proof }: PageProps) => {
   });
   const { Seo } = useSeo({
     openGraph: {
-      images: [{ url: `${metadata.url}/api/og/result?${searchParams}` }],
+      images: [
+        { url: `${metadata.url}/api/og/result?${searchParams}` },
+        {
+          url: `${metadata.url}/social.png`,
+          type: "image/png",
+          alt: metadata.name,
+        },
+      ],
     },
   });
   return (
