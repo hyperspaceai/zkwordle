@@ -37,7 +37,7 @@ interface GameModal {
   isGameOver: boolean;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://www.zkwordle.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://zkwordle.com";
 
 const GameModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
