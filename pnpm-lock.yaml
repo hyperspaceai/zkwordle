@@ -82,8 +82,8 @@ dependencies:
 
 devDependencies:
   '@hyperspaceinc/style-guide':
-    specifier: ^1.2.0
-    version: 1.2.0(eslint@8.35.0)(prettier@2.8.4)(tailwindcss@3.3.2)(typescript@4.9.5)
+    specifier: ^2.0.0
+    version: 2.0.0(eslint@8.35.0)(prettier@2.8.4)(tailwindcss@3.3.2)(typescript@4.9.5)
   '@types/node':
     specifier: ^18.14.6
     version: 18.14.6
@@ -1689,22 +1689,13 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
-  /@hyperspaceinc/style-guide@1.2.0(eslint@8.35.0)(prettier@2.8.4)(tailwindcss@3.3.2)(typescript@4.9.5):
-    resolution: {integrity: sha512-9TJA0qfLepun5VMLfwfV4i0FFMZkuzrTSKdaWclosIQYJBEPgN1tUqieUrjwnnza2mFUF9WwQVhjD91SHTuq5Q==, tarball: https://npm.pkg.github.com/download/@hyperspaceinc/style-guide/1.2.0/8b8998f06d51c7df7ae5538396b28a7dff7d38b9}
+  /@hyperspaceinc/style-guide@2.0.0(eslint@8.35.0)(prettier@2.8.4)(tailwindcss@3.3.2)(typescript@4.9.5):
+    resolution: {integrity: sha512-1t+bi50anyIwayen07U3Vg4JC4gnnOkySD3uOPE60PMscT9JnoHP/k5W7esaxv5BZKRqUXO8WJJbSRG+N5i1Kg==, tarball: https://npm.pkg.github.com/download/@hyperspaceinc/style-guide/2.0.0/3aa7c902ee25659e78cd498738e8a82377829a0f}
     peerDependencies:
       eslint: '>=8'
       prettier: '>=2'
       tailwindcss: '>=3'
-      typescript: '>=4'
-    peerDependenciesMeta:
-      eslint:
-        optional: true
-      prettier:
-        optional: true
-      tailwindcss:
-        optional: true
-      typescript:
-        optional: true
+      typescript: '>=4 || >=5'
     dependencies:
       '@babel/core': 7.22.1
       '@babel/eslint-parser': 7.21.8(@babel/core@7.22.1)(eslint@8.35.0)
@@ -1724,7 +1715,7 @@ packages:
       eslint-plugin-react-hooks: 4.6.0(eslint@8.35.0)
       eslint-plugin-simple-import-sort: 10.0.0(eslint@8.35.0)
       eslint-plugin-tsdoc: 0.2.17
-      eslint-plugin-unicorn: 45.0.2(eslint@8.35.0)
+      eslint-plugin-unicorn: 46.0.1(eslint@8.35.0)
       eslint-plugin-unused-imports: 2.0.0(@typescript-eslint/eslint-plugin@5.59.8)(eslint@8.35.0)
       prettier: 2.8.4
       tailwindcss: 3.3.2(ts-node@10.9.1)
@@ -3535,8 +3526,8 @@ packages:
       '@microsoft/tsdoc-config': 0.16.2
     dev: true
 
-  /eslint-plugin-unicorn@45.0.2(eslint@8.35.0):
-    resolution: {integrity: sha512-Y0WUDXRyGDMcKLiwgL3zSMpHrXI00xmdyixEGIg90gHnj0PcHY4moNv3Ppje/kDivdAy5vUeUr7z211ImPv2gw==}
+  /eslint-plugin-unicorn@46.0.1(eslint@8.35.0):
+    resolution: {integrity: sha512-setGhMTiLAddg1asdwjZ3hekIN5zLznNa5zll7pBPwFOka6greCKDQydfqy4fqyUhndi74wpDzClSQMEcmOaew==}
     engines: {node: '>=14.18'}
     peerDependencies:
       eslint: '>=8.28.0'
