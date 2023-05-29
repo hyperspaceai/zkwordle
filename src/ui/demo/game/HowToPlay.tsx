@@ -3,6 +3,7 @@ import {
   Divider,
   HStack,
   Icon,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -116,14 +117,18 @@ const HowToPlay = () => {
                 Proof Verification
               </Text>
               <Text display={{ base: "none", md: "block" }} fontSize={{ base: "xs", md: "sm" }}>
-                In this context, a Zero Knowledge (ZK) proof refers to a proof that demonstrates the occurrence of a
-                specific computation. What&apos;s unique about ZK proofs is that you can verify the proof&apos;s
-                accuracy without having to re-execute the original computation.
+                ZKWordle, built on the NanoZK framework, showcases the power of the ZKWasm runtime. This WebAssembly
+                (Wasm) runtime, developed by NanoZK, enables the generation of Zero Knowledge (ZK) proofs for all
+                executed code. In simple terms, a ZK proof serves as a certificate that verifies the correctness of the
+                game&apos;s outcome without revealing the actual answer.
               </Text>
               <Text fontSize={{ base: "xs", md: "sm" }}>
-                Once you finish guessing the validity of your guesses and the result you got will be packaged in a
-                shareable proof using our ZKWasm runtime which can be verified by anyone in their browser. This let’s
-                other people know in a self-verifiable way whether these guesses were actually the ones used by you.
+                Notably, the uniqueness of NanoZK lies in the fact that these ZK proofs are generated directly within
+                the user&apos;s browser. This browser-native proof generation is crucial as it enhances privacy and
+                security, allowing users to independently verify game results without relying on centralized
+                authorities. By executing the game and generating proofs locally, NanoZK empowers users with a
+                decentralized trust mechanism, offering a new level of transparency and integrity in multiplayer
+                experiences.
               </Text>
             </VStack>
           </ModalBody>
